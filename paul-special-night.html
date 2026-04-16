@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Special Night 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@400;500&family=Clash+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --card: #13131c;
+  --card2: #1c1c28;
+  --sports: #00e5ff;
+  --culture: #ff6b35;
+  --affairs: #39ff14;
+  --gold: #ffd700;
+  --white: #f0eeff;
+  --dim: #4a4a6a;
+  --glow-s: 0 0 30px #00e5ff55;
+  --glow-c: 0 0 30px #ff6b3555;
+  --glow-a: 0 0 30px #39ff1455;
+  --glow-g: 0 0 30px #ffd70055;
+  --radius: 16px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* GRAIN OVERLAY */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+#app { position:relative; z-index:1; }
+
+/* ── SCREENS ── */
+.screen { display:none; min-height:100vh; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem; }
+.screen.active { display:flex; }
+
+/* ── SETUP ── */
+#setup {
+  background: radial-gradient(ellipse 80% 60% at 50% -5%, #1a0a2e 0%, var(--bg) 55%);
+}
+.title-block { text-align:center; margin-bottom:2.5rem; }
+.paul-title {
+  font-family:'Archivo Black', sans-serif;
+  font-size: clamp(2.8rem,9vw,6rem);
+  line-height:.9;
+  letter-spacing:-1px;
+  background: linear-gradient(135deg, var(--gold) 0%, #ff8c00 40%, var(--culture) 80%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter: drop-shadow(0 0 40px #ffd70040);
+  animation: titlePulse 3s ease-in-out infinite;
+}
+@keyframes titlePulse {
+  0%,100% { filter:drop-shadow(0 0 40px #ffd70040); }
+  50% { filter:drop-shadow(0 0 70px #ff6b3560); }
+}
+.paul-sub { font-size:.7rem; letter-spacing:6px; color:var(--dim); text-transform:uppercase; margin-top:.6rem; }
+.birthday-badge {
+  display:inline-block;
+  background: linear-gradient(135deg,#ffd700,#ff8c00);
+  color:#000;
+  font-family:'Archivo Black',sans-serif;
+  font-size:.7rem;
+  letter-spacing:3px;
+  padding:.4rem 1.2rem;
+  border-radius:100px;
+  margin-top:.8rem;
+  text-transform:uppercase;
+}
+
+/* TEAM SETUP */
+.setup-box {
+  background:var(--card);
+  border:1px solid #ffffff0f;
+  border-radius:20px;
+  padding:2rem;
+  width:100%;
+  max-width:480px;
+  margin-bottom:2rem;
+}
+.setup-box h3 {
+  font-size:.65rem;
+  letter-spacing:5px;
+  color:var(--dim);
+  text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+.team-row {
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  margin-bottom:.7rem;
+}
+.t-dot {
+  width:9px; height:9px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.team-input {
+  flex:1;
+  background:#ffffff07;
+  border:1px solid #ffffff15;
+  border-radius:10px;
+  padding:.65rem 1rem;
+  color:var(--white);
+  font-family:'DM Mono';
+  font-size:.8rem;
+  outline:none;
+  transition:border-color .2s, background .2s;
+}
+.team-input:focus { border-color:var(--gold); background:#ffffff0d; }
+.remove-btn {
+  background:none;
+  border:1px solid #ffffff18;
+  border-radius:8px;
+  width:32px; height:32px;
+  color:var(--dim);
+  cursor:pointer;
+  font-size:1rem;
+  transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.remove-btn:hover { border-color:var(--culture); color:var(--culture); }
+.add-team-btn {
+  width:100%;
+  background:none;
+  border:1px dashed #ffffff18;
+  border-radius:10px;
+  padding:.65rem;
+  color:var(--dim);
+  font-family:'DM Mono';
+  font-size:.7rem;
+  cursor:pointer;
+  letter-spacing:2px;
+  transition:all .2s;
+  margin-top:.5rem;
+}
+.add-team-btn:hover { border-color:var(--white); color:var(--white); }
+.start-btn {
+  background:linear-gradient(135deg,var(--gold),#cc8800);
+  border:none;
+  border-radius:14px;
+  padding:1.1rem 3.5rem;
+  font-family:'Archivo Black';
+  font-size:1.6rem;
+  letter-spacing:3px;
+  color:#000;
+  cursor:pointer;
+  box-shadow:var(--glow-g);
+  transition:transform .15s, box-shadow .2s;
+}
+.start-btn:hover { transform:scale(1.04); box-shadow:0 0 50px #ffd70080; }
+
+/* ── CAT PICK ── */
+#cat-pick {
+  background: var(--bg);
+  text-align:center;
+}
+.cp-label { font-size:.65rem; letter-spacing:6px; color:var(--dim); text-transform:uppercase; }
+.cp-team {
+  font-family:'Archivo Black';
+  font-size:clamp(2.2rem,8vw,4rem);
+  letter-spacing:2px;
+  line-height:1;
+  margin:.3rem 0 .6rem;
+}
+.cp-hint { font-size:.65rem; color:var(--dim); letter-spacing:3px; margin-bottom:2.5rem; }
+
+.cat-grid { display:flex; flex-wrap:wrap; gap:1.2rem; justify-content:center; max-width:720px; }
+.cat-card {
+  flex:1;
+  min-width:190px;
+  max-width:230px;
+  background:var(--card);
+  border:2px solid #ffffff10;
+  border-radius:20px;
+  padding:2rem 1.2rem;
+  cursor:pointer;
+  transition:all .25s;
+  position:relative;
+  overflow:hidden;
+}
+.cat-card::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition:opacity .3s;
+}
+.cat-card.sports::before { background:radial-gradient(circle at 50% 0%,#00e5ff18,transparent 65%); }
+.cat-card.culture::before { background:radial-gradient(circle at 50% 0%,#ff6b3518,transparent 65%); }
+.cat-card.affairs::before { background:radial-gradient(circle at 50% 0%,#39ff1418,transparent 65%); }
+.cat-card:hover::before { opacity:1; }
+.cat-card.sports:hover { border-color:var(--sports); box-shadow:var(--glow-s); transform:translateY(-6px); }
+.cat-card.culture:hover { border-color:var(--culture); box-shadow:var(--glow-c); transform:translateY(-6px); }
+.cat-card.affairs:hover { border-color:var(--affairs); box-shadow:var(--glow-a); transform:translateY(-6px); }
+.cat-card.blocked { opacity:.18; pointer-events:none; }
+.cat-icon { font-size:2.8rem; margin-bottom:.7rem; }
+.cat-name {
+  font-family:'Archivo Black';
+  font-size:1.2rem;
+  letter-spacing:2px;
+  margin-bottom:.4rem;
+}
+.cat-card.sports .cat-name { color:var(--sports); }
+.cat-card.culture .cat-name { color:var(--culture); }
+.cat-card.affairs .cat-name { color:var(--affairs); }
+.cat-desc { font-size:.6rem; color:var(--dim); line-height:1.5; letter-spacing:1px; margin-bottom:1rem; }
+.cat-bar { height:4px; background:#ffffff0a; border-radius:2px; overflow:hidden; }
+.cat-bar-fill { height:100%; border-radius:2px; transition:width .4s; }
+.cat-card.sports .cat-bar-fill { background:var(--sports); }
+.cat-card.culture .cat-bar-fill { background:var(--culture); }
+.cat-card.affairs .cat-bar-fill { background:var(--affairs); }
+.cat-prog { font-size:.6rem; color:var(--dim); letter-spacing:2px; margin-top:.5rem; }
+
+/* ── QUESTION SCREEN ── */
+#question-screen {
+  align-items:stretch;
+  justify-content:flex-start;
+  padding:1rem;
+  max-width:700px;
+  margin:0 auto;
+  width:100%;
+}
+
+/* header */
+.q-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1rem;
+  flex-wrap:wrap;
+  gap:.5rem;
+}
+.q-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  padding:.4rem .9rem;
+  border-radius:100px;
+  font-size:.65rem;
+  font-weight:500;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+.q-badge.sports { background:#00e5ff15; color:var(--sports); border:1px solid #00e5ff30; }
+.q-badge.culture { background:#ff6b3515; color:var(--culture); border:1px solid #ff6b3530; }
+.q-badge.affairs { background:#39ff1415; color:var(--affairs); border:1px solid #39ff1430; }
+.q-team-name { font-size:.8rem; font-weight:500; }
+
+/* Timer */
+.timer-wrap { display:flex; justify-content:center; margin-bottom:1rem; }
+.timer-ring { position:relative; width:80px; height:80px; }
+.timer-ring svg { transform:rotate(-90deg); }
+.timer-ring circle { fill:none; stroke-width:5; stroke-linecap:round; }
+.t-bg { stroke:#ffffff0a; }
+.t-fg {
+  stroke:var(--affairs);
+  stroke-dasharray:226;
+  stroke-dashoffset:0;
+  transition:stroke-dashoffset 1s linear, stroke .5s;
+}
+.t-num {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Archivo Black';
+  font-size:1.6rem;
+}
+
+/* Question card */
+.q-card {
+  background:var(--card);
+  border:1px solid #ffffff0d;
+  border-radius:var(--radius);
+  padding:1.5rem;
+  margin-bottom:.8rem;
+}
+.q-num { font-size:.6rem; letter-spacing:4px; color:var(--dim); text-transform:uppercase; margin-bottom:.6rem; }
+.q-text {
+  font-family:'Archivo Black';
+  font-size:clamp(.95rem,2.3vw,1.15rem);
+  line-height:1.55;
+  color:var(--white);
+}
+
+/* Clue buttons */
+.clues-section { margin-bottom:.8rem; }
+.clues-label { font-size:.6rem; letter-spacing:4px; color:var(--dim); text-transform:uppercase; margin-bottom:.6rem; }
+.clue-btns { display:flex; gap:.6rem; flex-wrap:wrap; }
+
+.clue-btn-wrap { position:relative; flex:1; min-width:130px; }
+.clue-btn {
+  width:100%;
+  border:1px solid #ffffff18;
+  border-radius:12px;
+  padding:.7rem .9rem;
+  background:var(--card2);
+  color:var(--dim);
+  font-family:'DM Mono';
+  font-size:.7rem;
+  letter-spacing:2px;
+  cursor:pointer;
+  transition:all .2s;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  position:relative;
+}
+.clue-btn:hover { border-color:var(--gold); color:var(--white); background:#ffffff0a; }
+.clue-btn.opened { border-color:var(--gold); color:var(--gold); background:#ffd70010; }
+
+/* Tooltip clue popup */
+.clue-tooltip {
+  display:none;
+  position:absolute;
+  bottom:calc(100% + 8px);
+  left:50%;
+  transform:translateX(-50%);
+  background:#1e1e2e;
+  border:1px solid var(--gold);
+  border-radius:12px;
+  padding:.9rem 1.1rem;
+  font-size:.72rem;
+  line-height:1.55;
+  color:var(--white);
+  width:260px;
+  max-width:90vw;
+  z-index:100;
+  box-shadow:0 8px 32px #00000080;
+  cursor:pointer;
+  text-align:left;
+}
+.clue-tooltip::after {
+  content:'';
+  position:absolute;
+  top:100%; left:50%;
+  transform:translateX(-50%);
+  border:7px solid transparent;
+  border-top-color:#1e1e2e;
+}
+.clue-btn-wrap:hover .clue-tooltip { display:block; }
+.clue-tooltip.force-close { display:none !important; }
+.clue-num { font-size:.8rem; opacity:.4; font-weight:500; margin-right:.3rem; }
+
+/* Answer section */
+.ans-section { margin-bottom:.8rem; }
+.ans-hidden {
+  background:var(--card);
+  border:1px dashed #ffffff18;
+  border-radius:12px;
+  padding:1.1rem;
+  text-align:center;
+  cursor:pointer;
+  color:var(--dim);
+  font-size:.7rem;
+  letter-spacing:2px;
+  transition:all .2s;
+}
+.ans-hidden:hover { border-color:var(--white); color:var(--white); }
+.ans-shown {
+  background:#39ff1412;
+  border:1px solid #39ff1430;
+  border-radius:12px;
+  padding:1.1rem;
+  text-align:center;
+  display:none;
+}
+.ans-lbl { font-size:.6rem; letter-spacing:4px; color:var(--affairs); text-transform:uppercase; margin-bottom:.3rem; }
+.ans-text {
+  font-family:'Archivo Black';
+  font-size:clamp(1.1rem,3vw,1.6rem);
+  letter-spacing:2px;
+  color:var(--affairs);
+}
+
+/* Result buttons */
+.result-row { display:flex; gap:.6rem; flex-wrap:wrap; }
+.rb {
+  flex:1;
+  min-width:120px;
+  border:2px solid;
+  border-radius:12px;
+  padding:.8rem .5rem;
+  font-family:'Archivo Black';
+  font-size:1rem;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:all .15s;
+  background:none;
+  text-align:center;
+  line-height:1.3;
+}
+.rb:disabled { opacity:.25; cursor:default; }
+.rb.correct { color:var(--affairs); border-color:var(--affairs); }
+.rb.correct:not(:disabled):hover { background:var(--affairs); color:#000; box-shadow:var(--glow-a); }
+.rb.wrong { color:var(--culture); border-color:var(--culture); }
+.rb.wrong:not(:disabled):hover { background:var(--culture); color:#fff; box-shadow:var(--glow-c); }
+.rb.noanswer { color:var(--sports); border-color:var(--sports); }
+.rb.noanswer:not(:disabled):hover { background:var(--sports); color:#000; box-shadow:var(--glow-s); }
+.rb small { display:block; font-size:.6rem; opacity:.75; font-family:'DM Mono'; letter-spacing:2px; }
+
+/* ── SCOREBOARD ── */
+#scoreboard {
+  align-items:stretch;
+  justify-content:flex-start;
+  max-width:760px;
+  margin:0 auto;
+  width:100%;
+}
+.sb-title {
+  font-family:'Archivo Black';
+  font-size:2.4rem;
+  letter-spacing:3px;
+  text-align:center;
+  background:linear-gradient(135deg,var(--gold),var(--culture));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:.3rem;
+}
+.sb-sub { font-size:.6rem; letter-spacing:4px; color:var(--dim); text-align:center; margin-bottom:1.5rem; text-transform:uppercase; }
+
+.sb-progress {
+  background:var(--card);
+  border-radius:14px;
+  padding:1rem 1.2rem;
+  margin-bottom:1.2rem;
+  border:1px solid #ffffff08;
+}
+.sb-prog-title { font-size:.6rem; letter-spacing:3px; color:var(--dim); text-transform:uppercase; margin-bottom:.7rem; }
+.prog-row { display:flex; align-items:center; gap:.7rem; margin-bottom:.4rem; }
+.prog-lbl { font-size:.65rem; min-width:55px; color:var(--dim); }
+.prog-bar { flex:1; height:5px; background:#ffffff07; border-radius:3px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:3px; transition:width .4s; }
+.prog-fill.s { background:var(--sports); }
+.prog-fill.c { background:var(--culture); }
+.prog-fill.a { background:var(--affairs); }
+.prog-cnt { font-size:.7rem; color:var(--dim); min-width:30px; text-align:right; font-family:'Archivo Black'; }
+
+.sb-table {
+  background:var(--card);
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid #ffffff08;
+  margin-bottom:1.2rem;
+}
+.sb-row {
+  display:grid;
+  grid-template-columns:28px 1fr 44px 44px 44px 56px;
+  gap:.4rem;
+  padding:.8rem 1.1rem;
+  align-items:center;
+  border-bottom:1px solid #ffffff07;
+}
+.sb-row:last-child { border-bottom:none; }
+.sb-row.hdr { font-size:.55rem; letter-spacing:3px; color:var(--dim); text-transform:uppercase; }
+.sb-rank { font-family:'Archivo Black'; font-size:1.1rem; color:var(--dim); }
+.sb-rank.top { color:var(--gold); }
+.sb-name { font-family:'Archivo Black'; font-size:.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sb-s { font-family:'Archivo Black'; font-size:1rem; color:var(--sports); text-align:center; }
+.sb-c { font-family:'Archivo Black'; font-size:1rem; color:var(--culture); text-align:center; }
+.sb-a { font-family:'Archivo Black'; font-size:1rem; color:var(--affairs); text-align:center; }
+.sb-tot { font-family:'Archivo Black'; font-size:1.3rem; text-align:center; }
+
+.sb-actions { display:flex; gap:.8rem; justify-content:center; flex-wrap:wrap; }
+.sb-btn {
+  padding:.9rem 2rem;
+  border-radius:12px;
+  font-family:'Archivo Black';
+  font-size:1.1rem;
+  letter-spacing:2px;
+  cursor:pointer;
+  border:none;
+  transition:all .2s;
+}
+.sb-next { background:var(--affairs); color:#000; }
+.sb-next:hover { box-shadow:var(--glow-a); transform:scale(1.04); }
+.sb-end { background:#ffffff12; color:var(--white); border:1px solid #ffffff20; }
+.sb-end:hover { background:#ffffff20; }
+
+/* ── WINNER ── */
+#winner-screen {
+  background:radial-gradient(ellipse at 50% 35%, #1a1000 0%, var(--bg) 60%);
+  text-align:center;
+}
+.trophy { font-size:5rem; margin-bottom:.5rem; animation:bounce 1.3s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-20px) rotate(3deg);} }
+.w-label { font-size:.65rem; letter-spacing:6px; color:var(--dim); text-transform:uppercase; margin-bottom:.2rem; }
+.w-name {
+  font-family:'Archivo Black';
+  font-size:clamp(2.5rem,12vw,6rem);
+  letter-spacing:3px;
+  line-height:1;
+  background:linear-gradient(135deg,var(--gold),#ff6d00);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.w-pts { font-size:.8rem; color:var(--dim); margin:.4rem 0 2rem; }
+.w-board { background:var(--card); border-radius:14px; overflow:hidden; width:100%; max-width:420px; margin-bottom:1.8rem; }
+.w-row { display:flex; justify-content:space-between; align-items:center; padding:.7rem 1.1rem; border-bottom:1px solid #ffffff07; }
+.w-row:last-child { border-bottom:none; }
+.w-rname { font-family:'Archivo Black'; font-size:.8rem; }
+.w-rpts { font-family:'Archivo Black'; font-size:1.2rem; }
+.play-again {
+  background:linear-gradient(135deg,var(--gold),#cc7700);
+  border:none;
+  border-radius:14px;
+  padding:1rem 2.8rem;
+  font-family:'Archivo Black';
+  font-size:1.4rem;
+  letter-spacing:2px;
+  color:#000;
+  cursor:pointer;
+  box-shadow:var(--glow-g);
+  transition:transform .15s;
+}
+.play-again:hover { transform:scale(1.05); }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:2rem; left:50%;
+  transform:translateX(-50%);
+  background:var(--card2);
+  border:1px solid #ffffff20;
+  border-radius:100px;
+  padding:.6rem 1.3rem;
+  font-size:.7rem; letter-spacing:2px;
+  z-index:999; opacity:0;
+  transition:opacity .3s;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show { opacity:1; }
+.toast.good { border-color:#39ff1450; color:var(--affairs); }
+.toast.bad { border-color:#ff6b3550; color:var(--culture); }
+.toast.neutral { border-color:#00e5ff50; color:var(--sports); }
+
+/* CONFETTI */
+.cp { position:fixed; border-radius:3px; animation:fall linear forwards; pointer-events:none; z-index:100; }
+@keyframes fall {
+  0% { transform:translateY(-20px) rotate(0deg); opacity:1; }
+  100% { transform:translateY(110vh) rotate(720deg); opacity:0; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══ SETUP ══ -->
+<div class="screen active" id="setup">
+  <div class="title-block">
+    <div class="paul-title">PAUL<br>SPECIAL<br>NIGHT</div>
+    <div class="paul-sub">Birthday Edition</div>
+    <div class="birthday-badge">🎂 July 2026</div>
+  </div>
+  <div class="setup-box">
+    <h3>Team Names (2–6 teams)</h3>
+    <div id="team-inputs"></div>
+    <button class="add-team-btn" id="add-btn">+ ADD TEAM</button>
+  </div>
+  <button class="start-btn" id="start-btn">KICK OFF 🎉</button>
+</div>
+
+<!-- ══ CATEGORY PICK ══ -->
+<div class="screen" id="cat-pick">
+  <div style="text-align:center;margin-bottom:2rem;">
+    <div class="cp-label">It's your turn</div>
+    <div class="cp-team" id="cp-team">Team 1</div>
+    <div class="cp-hint" id="cp-hint">PICK A CATEGORY — 5 QUESTIONS EACH</div>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card sports" data-cat="sports">
+      <div class="cat-icon">⚽🏃</div>
+      <div class="cat-name">Sports &amp; Football</div>
+      <div class="cat-desc">Matches · Transfers · Athletics stats</div>
+      <div class="cat-bar"><div class="cat-bar-fill" id="bar-sports" style="width:0%"></div></div>
+      <div class="cat-prog" id="prog-sports">0 / 5 done</div>
+    </div>
+    <div class="cat-card culture" data-cat="culture">
+      <div class="cat-icon">🎵🎬</div>
+      <div class="cat-name">Pop Culture &amp; Music</div>
+      <div class="cat-desc">Hits · Movies · Viral moments</div>
+      <div class="cat-bar"><div class="cat-bar-fill" id="bar-culture" style="width:0%"></div></div>
+      <div class="cat-prog" id="prog-culture">0 / 5 done</div>
+    </div>
+    <div class="cat-card affairs" data-cat="affairs">
+      <div class="cat-icon">🌍📱</div>
+      <div class="cat-name">Kenya &amp; Global Affairs</div>
+      <div class="cat-desc">Politics · Tech · World facts</div>
+      <div class="cat-bar"><div class="cat-bar-fill" id="bar-affairs" style="width:0%"></div></div>
+      <div class="cat-prog" id="prog-affairs">0 / 5 done</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ QUESTION ══ -->
+<div class="screen" id="question-screen">
+  <div class="q-header">
+    <div class="q-badge sports" id="q-badge">⚽ Sports</div>
+    <div class="q-team-name" id="q-team-name">Team 1</div>
+  </div>
+
+  <div class="timer-wrap">
+    <div class="timer-ring">
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        <circle class="t-bg" cx="40" cy="40" r="36"/>
+        <circle class="t-fg" id="timer-circle" cx="40" cy="40" r="36"/>
+      </svg>
+      <div class="t-num" id="timer-num">60</div>
+    </div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num" id="q-num">QUESTION 1 / 5</div>
+    <div class="q-text" id="q-text">—</div>
+  </div>
+
+  <div class="clues-section">
+    <div class="clues-label">HOVER TO PEEK · DOUBLE-CLICK TO CLOSE</div>
+    <div class="clue-btns">
+      <div class="clue-btn-wrap" id="cwrap1">
+        <button class="clue-btn" id="cbtn1"><span class="clue-num">1</span> CLUE ONE</button>
+        <div class="clue-tooltip" id="ctip1">—</div>
+      </div>
+      <div class="clue-btn-wrap" id="cwrap2">
+        <button class="clue-btn" id="cbtn2"><span class="clue-num">2</span> CLUE TWO</button>
+        <div class="clue-tooltip" id="ctip2">—</div>
+      </div>
+      <div class="clue-btn-wrap" id="cwrap3">
+        <button class="clue-btn" id="cbtn3"><span class="clue-num">3</span> CLUE THREE</button>
+        <div class="clue-tooltip" id="ctip3">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ans-section">
+    <div class="ans-hidden" id="ans-hidden" onclick="revealAnswer()">👁 REVEAL ANSWER</div>
+    <div class="ans-shown" id="ans-shown">
+      <div class="ans-lbl">ANSWER</div>
+      <div class="ans-text" id="ans-text">—</div>
+    </div>
+  </div>
+
+  <div class="result-row">
+    <button class="rb correct" id="btn-correct" onclick="scoreIt(1)" disabled>✓ CORRECT<small>+1 PT</small></button>
+    <button class="rb wrong" id="btn-wrong" onclick="scoreIt(-1)" disabled>✗ WRONG<small>−1 PT</small></button>
+    <button class="rb noanswer" id="btn-none" onclick="scoreIt(0)" disabled>⏱ NO ANSWER<small>0 PTS</small></button>
+  </div>
+</div>
+
+<!-- ══ SCOREBOARD ══ -->
+<div class="screen" id="scoreboard">
+  <div class="sb-title">SCOREBOARD</div>
+  <div class="sb-sub" id="sb-sub">After 0 questions</div>
+  <div class="sb-progress">
+    <div class="sb-prog-title">Game Progress</div>
+    <div class="prog-row">
+      <div class="prog-lbl">⚽🏃</div>
+      <div class="prog-bar"><div class="prog-fill s" id="pfill-sports"></div></div>
+      <div class="prog-cnt" id="pcnt-sports">0</div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-lbl">🎵🎬</div>
+      <div class="prog-bar"><div class="prog-fill c" id="pfill-culture"></div></div>
+      <div class="prog-cnt" id="pcnt-culture">0</div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-lbl">🌍📱</div>
+      <div class="prog-bar"><div class="prog-fill a" id="pfill-affairs"></div></div>
+      <div class="prog-cnt" id="pcnt-affairs">0</div>
+    </div>
+  </div>
+  <div class="sb-table">
+    <div class="sb-row hdr">
+      <span>#</span><span>TEAM</span>
+      <span style="color:var(--sports);text-align:center">⚽</span>
+      <span style="color:var(--culture);text-align:center">🎵</span>
+      <span style="color:var(--affairs);text-align:center">🌍</span>
+      <span style="text-align:center">PTS</span>
+    </div>
+    <div id="sb-rows"></div>
+  </div>
+  <div class="sb-actions">
+    <button class="sb-btn sb-next" id="sb-next">NEXT TURN →</button>
+    <button class="sb-btn sb-end" onclick="endGame()">END GAME</button>
+  </div>
+</div>
+
+<!-- ══ WINNER ══ -->
+<div class="screen" id="winner-screen">
+  <div class="trophy">🏆</div>
+  <div class="w-label">Paul Special Night Champion</div>
+  <div class="w-name" id="w-name">—</div>
+  <div class="w-pts" id="w-pts">0 points</div>
+  <div class="w-board" id="w-board"></div>
+  <button class="play-again" onclick="resetAll()">PLAY AGAIN 🎂</button>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// QUESTION BANK
+// ═══════════════════════════════════════════════
+const QBANK = {
+
+/* ── SPORTS & FOOTBALL: 30 questions ──────────────────────
+   15 Football (5 Chelsea, 5 Kenya, 5 Africa)
+   15 Athletics (5 Kenya, 5 Africa, 5 Global) */
+sports: [
+
+  // ── CHELSEA (5) ────────────────────────────────
+  {q:"This Chelsea striker was signed from Ipswich Town for £30 million in summer 2025 by activating his release clause. He scored on his Club World Cup debut against ES Tunis.",
+   clues:["He's an England Under-21 international who impressed hugely in the Premier League for his previous club.",
+          "He arrived at Stamford Bridge as the main striker after Cole Palmer operated in the No.10 role.",
+          "His surname is one letter away from the word 'delay' — and injuries slowed him down mid-season."],
+   a:"Liam Delap"},
+
+  {q:"Chelsea sold this winger to their London rivals Arsenal in summer 2025 — a move that shocked many Blues fans given his promise.",
+   clues:["He's a pacey English winger who came through Chelsea's academy and rose through the ranks.",
+          "His first name rhymes with 'honey' and his surname is the same as a famous Madukwy — actually it starts with Noni.",
+          "He crossed the North/South London divide to sign for a team that wears red."],
+   a:"Noni Madueke"},
+
+  {q:"This 18-year-old Brazilian winger joined Chelsea ahead of the 2025/26 season and was already a full Brazil international. He scored against Chelsea in the Club World Cup quarter-finals for his former club before joining them.",
+   clues:["His name sounds like a word meaning 'amazing' in informal Brazilian Portuguese.",
+          "His former club was Palmeiras, and he was one of the brightest talents at the Club World Cup.",
+          "He shares his forename's spelling with the phrase 'Estevao Willian' — a 5-letter first name."],
+   a:"Estevão Willian"},
+
+  {q:"Chelsea sacked this manager mid-season 2025/26 after winning both the Conference League and Club World Cup the previous season. He was replaced by Liam Rosenior.",
+   clues:["He joined Chelsea in 2024 and implemented a high-press, possession-heavy style.",
+          "His surname is an Italian name — think 'Enzo' followed by a word meaning 'merchant.'",
+          "Despite back-to-back trophy wins, results in the Premier League were inconsistent enough for the board to act."],
+   a:"Enzo Maresca"},
+
+  {q:"Chelsea are set to face this club in the 2025/26 Champions League Round of 16, in what promises to be a blockbuster European tie. First leg was away for Chelsea.",
+   clues:["This club has won the Champions League multiple times and plays in one of Europe's biggest cities.",
+          "Their home kit is all-white. They play in La Liga and their nickname references a royal figure.",
+          "Chelsea's draw placed them against the most successful club in Champions League history."],
+   a:"Paris Saint-Germain (PSG)"},
+
+  // ── KENYA FOOTBALL (5) ──────────────────────────
+  {q:"He is Kenya's all-time top scorer and captain, plays as a striker, and plied his trade in Japan's J-League. In the 2025/26 season he played in Qatar.",
+   clues:["His first name is Michael and he's the most recognizable Kenyan footballer globally since 2021.",
+          "He famously scored four goals in a single AFC Champions League game for his Japanese club.",
+          "The phrase 'Harambee Stars' captain automatically evokes his name in East African football circles."],
+   a:"Michael Olunga"},
+
+  {q:"Gor Mahia and this club are Kenya's fiercest rivals — the 'Mashemeji Derby.' The green vs the red-and-black clash draws the biggest crowds in Kenyan football.",
+   clues:["This club's nickname is 'Ingwe,' meaning leopard in Luhya.",
+          "Their full name includes the initials 'AFC' and the word 'Leopards.'",
+          "Founded in 1938, they are one of the oldest football clubs in East Africa."],
+   a:"AFC Leopards"},
+
+  {q:"This tournament, named in honour of CECAFA member nations, is the oldest regional football competition in Africa. Kenya's Harambee Stars have participated since the 1970s.",
+   clues:["It involves East and Central African national teams competing for a trophy.",
+          "Its full name is the Council for East and Central Africa Football Associations Senior Challenge Cup.",
+          "Uganda and Tanzania are among the regular contenders alongside Kenya in this regional championship."],
+   a:"CECAFA Senior Challenge Cup"},
+
+  {q:"This Kenyan footballer made history as one of the first Kenyans to regularly play in Europe's top leagues, spending time in Denmark and Finland in the early 2020s.",
+   clues:["He plays as a winger or attacking midfielder and was known for his pace on the flanks.",
+          "He represented the Harambee Stars in various AFCON qualifiers during his peak years.",
+          "Kenya's diaspora in Europe followed his career closely as a symbol of local talent reaching European shores."],
+   a:"Michael Olunga / Johanna Oduya (Johanna Oduya)"},
+
+  {q:"Kenya's Football Kenya Federation Premier League is dominated by two clubs — but who holds the record for the most league titles in Kenyan football history as of 2025?",
+   clues:["This club was founded in 1968 and named after a Luo cultural hero.",
+          "They have won over 18 league titles, more than any other club in Kenyan football.",
+          "Their nickname is 'The Green Army' and they wear green and white."],
+   a:"Gor Mahia FC"},
+
+  // ── AFRICA FOOTBALL (5) ────────────────────────
+  {q:"This South African striker became AFCON's top scorer in the 2023 edition and led his nation to the final before they lost. He plays in Europe and wears the Bafana Bafana jersey.",
+   clues:["His first name is Percy and his surname starts with 'Tau' — same as the Greek letter.",
+          "He plays for Al Ahly in Egypt after spells at Club Brugge and Anderlecht.",
+          "South Africa's run to the 2023 AFCON final was largely credited to his goals."],
+   a:"Percy Tau"},
+
+  {q:"Senegal won the 2021 AFCON (held in 2022) and then retained it by winning the 2023 edition too. Which player captained them to BOTH of these continental titles?",
+   clues:["He's one of the world's most expensive players, valued at over £100m at his peak.",
+          "He plays for Liverpool and is renowned as one of the best forwards in the Premier League.",
+          "His first name is Sadio and his surname sounds like a West African family name starting with M."],
+   a:"Sadio Mané"},
+
+  {q:"This Nigerian Super Eagles striker was the top scorer at the 2023 AFCON tournament and is one of Africa's deadliest forwards. He plays for a top European club.",
+   clues:["His first name is Victor and his surname is Osimhen.",
+          "He scored the goals that fired Nigeria to the 2023 AFCON final before they lost to Ivory Coast.",
+          "His pace and power have drawn comparisons to Didier Drogba in his pomp."],
+   a:"Victor Osimhen"},
+
+  {q:"Morocco's Atlas Lions became the first African team to reach a FIFA World Cup semi-final when they achieved this historic feat at the 2022 tournament in Qatar.",
+   clues:["They defeated Spain and Portugal on their historic run — two former World Cup winners.",
+          "Their goalkeeper was widely regarded as the player of the tournament, with an incredible save record.",
+          "The semi-final was against France, who ultimately beat them and went on to the final."],
+   a:"Morocco's 2022 World Cup semi-final run"},
+
+  {q:"Which North African country hosted the 2019 AFCON and won the title that year, ending a 29-year wait for continental glory?",
+   clues:["They wore green jerseys and played their home games at the Cairo International Stadium.",
+          "Their captain, Riyad Mahrez, was the standout player, scoring key goals in the knockout rounds.",
+          "The winning goal in the final was scored by Baghdad Bounedjah after just 2 minutes against Senegal."],
+   a:"Algeria"},
+
+  // ── KENYA ATHLETICS (5) ────────────────────────
+  {q:"At the 2025 World Athletics Championships in Tokyo, this Kenyan athlete completed an incredible distance double — winning both the 5000m and 10000m gold medals.",
+   clues:["She is 25 years old and had not been beaten in the 5000m or 10000m for two years before Tokyo.",
+          "She previously won both events at the Paris 2024 Olympics, making her the reigning Olympic and World champion.",
+          "In the 5000m final she edged her compatriot Faith Kipyegon in the final straight."],
+   a:"Beatrice Chebet"},
+
+  {q:"This Kenyan 800m star won gold at the 2025 World Athletics Championships in Tokyo in a championship-record time of 1:41.86. He is the reigning Olympic champion.",
+   clues:["He's from Kenya and won the Olympic 800m gold at Paris 2024.",
+          "His full name is Emmanuel Wanyonyi — a Luhya name meaning 'God is with us.'",
+          "He has been anointed as the natural successor to David Rudisha's throne in Kenyan middle-distance running."],
+   a:"Emmanuel Wanyonyi"},
+
+  {q:"This Kenyan steeplechase athlete won bronze in the women's 3000m steeplechase at the 2025 World Championships in Tokyo and holds a U20 world title. She's just 21.",
+   clues:["Her first name is Faith — and she ran a personal best of 8:48.71 at the Prefontaine Classic in 2025.",
+          "She won her U20 world title earlier in her teens and also has a Diamond League final win.",
+          "Her surname is Cherotich — a Kalenjin name evoking bravery."],
+   a:"Faith Cherotich"},
+
+  {q:"Eliud Kipchoge voluntarily withdrew from the 2025 World Athletics Championships in Tokyo. What reason did he give for stepping aside?",
+   clues:["He cited a desire to make way for a new generation of Kenyan runners on the global stage.",
+          "He was 40 years old at the time of the championships, having been born in November 1984.",
+          "Despite no longer chasing world titles, he remains the world marathon record holder."],
+   a:"To allow younger athletes greater opportunity on the global stage"},
+
+  {q:"At the 2025 World Athletics Championships, Kenyan young talent Reynold Cheruiyot won bronze in the men's 1500m. His time was 3:34.25. What year was he born — making him just 20 years old in Tokyo?",
+   clues:["Born in 2005, he is among Kenya's youngest World Championship medalists.",
+          "He had already beaten 2019 world champion Timothy Cheruiyot at the national trials earlier that year.",
+          "His surname is the same as a more famous Kenyan runner — Timothy Cheruiyot — but they are different people."],
+   a:"2005 (Reynold Cheruiyot)"},
+
+  // ── AFRICA ATHLETICS (5) ──────────────────────
+  {q:"This Ethiopian marathon runner nearly beat Peres Jepchirchir at the 2025 World Athletics Championships women's marathon, finishing just 2 seconds behind in the sprint to the line.",
+   clues:["Her name is Tigst Assefa and she holds the women's marathon world record set in Berlin.",
+          "She finished second in a sprint finish that saw her cross the line in 2:24:45 — just fractions behind the winner.",
+          "She previously won the Berlin Marathon and is considered Kenya's greatest rival in women's marathons."],
+   a:"Tigst Assefa"},
+
+  {q:"Morocco's Soufiane El Bakkali won silver in the men's 3000m steeplechase at the 2025 World Championships in Tokyo, narrowly missing gold. What nationality is the athlete who beat him?",
+   clues:["The winner, Geordie Beamish, comes from an island nation in the South Pacific.",
+          "It was a historic upset as El Bakkali was the defending Olympic and World champion going into Tokyo.",
+          "The winning country rarely produces distance runners — this was a massive shock on the global stage."],
+   a:"New Zealand"},
+
+  {q:"Nigeria's Tobi Amusan is Africa's fastest woman in the 100m hurdles. At which major championship did she break the world record in her event — only to be controversially disqualified from the final?",
+   clues:["The disqualification was related to a doping test sample collection controversy, not a positive test.",
+          "The championship was the World Athletics Championships and the year was 2022 in Eugene, Oregon.",
+          "She later had her world record ratified and continued competing, becoming Africa's 100m hurdles queen."],
+   a:"2022 World Athletics Championships in Eugene (world record in semis)"},
+
+  {q:"Which African country has produced the most Olympic athletics medals in history after Kenya, with Ethiopia's distance runners dominating global long-distance running?",
+   clues:["Haile Gebrselassie, Kenenisa Bekele, and Almaz Ayana are among their most celebrated champions.",
+          "Their athletes dominate the 5000m and 10000m at every major championships.",
+          "Their capital city is Addis Ababa, and they have a fierce rivalry with Kenya in distance running."],
+   a:"Ethiopia"},
+
+  {q:"South Africa's Wayde van Niekerk set the 400m world record at the 2016 Rio Olympics, breaking Michael Johnson's 17-year-old record. What time did he run?",
+   clues:["He ran in lane 8 — historically considered the worst lane for tactical awareness.",
+          "His time was 43.03 seconds, smashing the previous record of 43.18 held by Michael Johnson since 1999.",
+          "He became the first African to hold the 400m world record, a dominant sprint event."],
+   a:"43.03 seconds"},
+
+  // ── GLOBAL ATHLETICS (5) ──────────────────────
+  {q:"At the 2025 World Athletics Championships in Tokyo, American Cole Hocker won gold in the men's 5000m. He had previously shocked the world by winning which event at Paris 2024?",
+   clues:["He won the Olympic gold at Paris in an event where he wasn't considered the favourite.",
+          "The event was the men's 1500m — a middle-distance run that is historically dominated by Kenyans and Moroccans.",
+          "He beat Josh Kerr and Jakob Ingebrigtsen in one of the most stunning upsets of the Paris Olympics."],
+   a:"Men's 1500m at Paris 2024 Olympics"},
+
+  {q:"The women's marathon at the 2025 World Athletics Championships saw a sprint finish decided by just 2 seconds. Which Kenyan won gold — making her a defending Olympic marathon champion too?",
+   clues:["She won the Olympic marathon gold at Paris 2024, and defended it with another major title in 2025.",
+          "Her first name is Peres and her surname is Jepchirchir — a classic Kalenjin woman's name.",
+          "She held off Ethiopia's Tigst Assefa in one of the most dramatic marathon finishes in championship history."],
+   a:"Peres Jepchirchir"},
+
+  {q:"This American sprinter is considered the fastest woman alive, having dominated the 100m since 2023. She ran the fastest legal 100m by a woman in over a decade in 2024.",
+   clues:["Her first name is Sha'Carri — a name uniquely her own. Her surname is Richardson.",
+          "She famously missed the Tokyo 2020 Olympics due to a marijuana-related suspension.",
+          "At Paris 2024, she anchored the USA 4x100m relay to gold, partly redeeming her earlier Olympic absence."],
+   a:"Sha'Carri Richardson"},
+
+  {q:"Jamaica's Kishane Thompson was widely expected to become the world's fastest man at Paris 2024 but lost by just 0.005 seconds. Who actually won the men's 100m gold?",
+   clues:["The winner is American, and it was considered one of the closest 100m finals in Olympic history.",
+          "His time was 9.79 seconds — narrowly edging Thompson who ran 9.79 too but was behind on the photo finish.",
+          "His first name is Noah and his surname is Lyles — a vocal, flamboyant sprinter who calls himself 'The World's Fastest Man.'"],
+   a:"Noah Lyles"},
+
+  {q:"At the Paris 2024 Olympics, which Norwegian middle-distance legend won the men's 1500m silver medal, having previously won World and Olympic titles? He later finished 4th in Tokyo 2025 in the event.",
+   clues:["He's blonde, European, and was considered the world's best 1500m runner for several years.",
+          "His first name is Jakob and his surname is Ingebrigtsen — a Norwegian family famous for producing runners.",
+          "He won the 1500m at both the Tokyo 2020 Olympics and the 2022 World Championships."],
+   a:"Jakob Ingebrigtsen"}
+],
+
+/* ── POP CULTURE & MUSIC: 30 questions ──────────────
+   10 Pop, 10 Culture, 10 Music */
+culture: [
+
+  // ── POP (10) ───────────────────────────────────
+  {q:"Taylor Swift's 2025 album broke the record for the biggest first-week debut ever, selling 4 million units. What is the album called?",
+   clues:["The title evokes performance, glamour, and showbusiness — think a woman commanding a stage.",
+          "It followed her record-breaking Eras Tour and her engagement to NFL star Travis Kelce.",
+          "The album name references a classic theatrical word — 'The Life of a...'"],
+   a:"The Life of a Showgirl"},
+
+  {q:"At the 2025 Super Bowl halftime show, this rapper performed 'Not Like Us' live — escalating his beef with Drake to a global stage in front of over 127 million viewers.",
+   clues:["He wore bootcut Celine denim — which then went viral as a fashion moment in itself.",
+          "Cameos from Serena Williams, SZA, Mustard, and Samuel L. Jackson lit up his 13-minute set.",
+          "He is from Compton and this performance closed out one of rap history's most intense beefs."],
+   a:"Kendrick Lamar"},
+
+  {q:"This viral 2025 Coldplay concert moment involved a married CEO and the company's head of HR being caught on a kiss-cam jumbotron, causing them to panic and flee. What company did they work for?",
+   clues:["The incident happened at Gillette Stadium in Foxborough, Massachusetts, during Coldplay's world tour.",
+          "Internet sleuths identified the pair within days, and both resigned from the company shortly after.",
+          "The firm specializes in data orchestration software — their stock symbol is not exactly household knowledge."],
+   a:"Astronomer"},
+
+  {q:"At the 2025 Grammy Awards, this artist finally won Album of the Year — becoming the first Black woman to win that award in the 21st century. She also won Best Country Album, making history.",
+   clues:["This was her sixth Grammy nomination for Album of the Year, having been famously snubbed multiple times.",
+          "Her album was a country-crossover record that debuted at number 1 in over 30 countries.",
+          "She is one of the most decorated artists in Grammy history. Her name starts with Bey..."],
+   a:"Beyoncé"},
+
+  {q:"Katy Perry made global headlines in April 2025 when she was part of an all-female crew that went to space. Which space company's rocket did she travel on?",
+   clues:["The spaceship was named New Shepard and the flight was suborbital.",
+          "Also on the crew was Lauren Sánchez, who married Jeff Bezos that same year.",
+          "The company's founder is the same billionaire who owns Amazon."],
+   a:"Blue Origin"},
+
+  {q:"Netflix's animated film became the platform's most-watched film of all time in 2025 with 236 million global streams. It featured a fictional K-pop group called Huntrix who fight demons. What was the film called?",
+   clues:["Its title combines the K-pop genre with a word suggesting supernatural hunters.",
+          "The film's song 'Golden' dominated music charts and landed four simultaneous Top 10 hits on Billboard.",
+          "It was produced by Sony Pictures Animation and directed by Maggie Kang and Chris Appelhans."],
+   a:"KPop Demon Hunters"},
+
+  {q:"Sean 'Diddy' Combs was sentenced to prison in October 2025. What crimes was he convicted of — and notably, what more serious charges was he acquitted of?",
+   clues:["He was sentenced to more than four years in prison after a seven-week trial.",
+          "He was convicted of two counts of transportation to engage in prostitution.",
+          "He was acquitted of the more serious racketeering conspiracy and sex trafficking charges."],
+   a:"Convicted of prostitution-related charges; acquitted of racketeering and sex trafficking"},
+
+  {q:"The first American Pope in history was elected in May 2025. What name did he take as Pope and where did he grow up?",
+   clues:["He was born Robert Frances Prevost and was 69 years old at his election.",
+          "He attended Villanova University and loves the Chicago White Sox baseball team.",
+          "He chose the name Leo XIV upon becoming Pope — the first American to lead the Catholic Church."],
+   a:"Pope Leo XIV"},
+
+  {q:"Taylor Swift and which NFL star got engaged in 2025, after their relationship dominated pop culture for over a year?",
+   clues:["He's a tight end who has won multiple Super Bowl rings with the Kansas City Chiefs.",
+          "Their relationship began in late 2023 when she was spotted at one of his games.",
+          "His first name is Travis and his surname is Kelce — his brother Jason also plays NFL."],
+   a:"Travis Kelce"},
+
+  {q:"Ryan Coogler's film 'Sinners' grossed $367.8 million worldwide in 2025 on a budget of just $90 million. What genre is it and who plays the lead dual role?",
+   clues:["The film involves vampires, Black American music history, and is set in the Deep South.",
+          "The lead actor plays twin brothers named 'the Smokestack twins' in the film.",
+          "The director also made Black Panther and Creed. The actor is known for his role as Killmonger."],
+   a:"Vampire horror/drama — Michael B. Jordan"},
+
+  // ── CULTURE (10) ──────────────────────────────
+  {q:"The 'aura farming' trend went viral on TikTok in 2025, spreading from a video of an 11-year-old boy dancing on a boat. What country and traditional sport did the video come from?",
+   clues:["The boy's name is Rayyan Arkan Dikha and he became a global sensation.",
+          "The traditional sport in the video involves boat racing on rivers — it's called Pacu Jalur.",
+          "The country is in Southeast Asia and is the world's largest archipelago nation."],
+   a:"Indonesia (Pacu Jalur boat racing)"},
+
+  {q:"Labubu dolls became 2025's biggest collectible craze. These toothy plush toys come in blind boxes from which Chinese toy company?",
+   clues:["The company sells them in 'blind boxes' so buyers don't know which design they'll get.",
+          "The Labubu character was created by artist Kasing Lung and belongs to 'The Monsters' toy series.",
+          "A life-size Labubu sold at auction in China for more than $170,000, and fake versions called 'Lafufus' flooded markets."],
+   a:"Pop Mart"},
+
+  {q:"The ChatGPT Studio Ghibli image trend went viral in 2025. What update to ChatGPT triggered it — and what controversy did it spark?",
+   clues:["OpenAI released a new version of their image generation tool that could mimic specific artistic styles.",
+          "Users flooded social media with Ghibli-style selfies, memes, and videos — drawing attention from OpenAI CEO Sam Altman.",
+          "The trend sparked debate about copyright because it replicated the style of a beloved Japanese animation studio."],
+   a:"ChatGPT image generation update that could mimic Studio Ghibli's art style (copyright controversy)"},
+
+  {q:"In 2025, a viral trend called '#StartingOver' swept social media. What did it involve?",
+   clues:["It was particularly popular among people in their late 20s and early 30s.",
+          "People shared candid video diaries about major life changes — leaving relationships, quitting jobs, moving abroad.",
+          "The hashtag encouraged honesty about personal reinvention and resonated globally on TikTok and Instagram."],
+   a:"People sharing video diaries about major life changes and personal reinvention"},
+
+  {q:"Which beloved animated children's show became the most-watched programme of 2025 with 31.9 billion minutes viewed on its streaming platform?",
+   clues:["The show features a family of dogs and is made in Australia, but is loved worldwide.",
+          "It's broadcast on Disney+ and appeals to both children and their parents.",
+          "The characters have one-word names based on dog breeds. The main character is a Blue Heeler puppy."],
+   a:"Bluey"},
+
+  {q:"TikTok in the US narrowly avoided being banned in January 2025. What eventually happened to prevent a permanent ban?",
+   clues:["President Trump repeatedly delayed the enforcement of the ban passed under the previous administration.",
+          "In September 2025, Trump struck a deal that involved transferring majority ownership of TikTok to Americans.",
+          "During the uncertainty, US users flocked to a Chinese-owned alternative platform called RedNote in protest."],
+   a:"Trump delayed enforcement and later struck a deal to transfer majority ownership to American investors"},
+
+  {q:"The 'Minecraft Movie' became the biggest global box office hit of 2025 by a mainstream metric. How close did it come to grossing $1 billion worldwide?",
+   clues:["Released in 2025, it was based on the best-selling video game of all time.",
+          "It came close but didn't quite reach the $1 billion milestone globally.",
+          "It became the biggest video game movie at the time of its release, surpassing The Super Mario Bros. Movie."],
+   a:"A Minecraft Movie grossed close to $1 billion worldwide"},
+
+  {q:"Coldplay's concert Jumbotron kiss-cam cheating scandal in 2025 became the biggest viral moment of the year. What specific song was playing when the footage went viral — and where was the concert?",
+   clues:["The stadium was Gillette Stadium in Foxborough, Massachusetts.",
+          "Coldplay's frontman Chris Martin jokingly commented 'they're having an affair or they're just very shy.'",
+          "The couple were so startled by appearing on screen that they immediately separated and tried to hide."],
+   a:"Gillette Stadium, Foxborough — the couple were caught canoodling on the kiss-cam during Coldplay's world tour"},
+
+  {q:"This plush doll character became so collectible in 2025 that heists and resale scams emerged around it. What does the word 'Lafufu' mean in this context?",
+   clues:["'Lafufus' are counterfeit versions of a popular plush toy sold in blind boxes.",
+          "The original toy's name is Labubu — a toothy, slightly ugly fictional character by artist Kasing Lung.",
+          "Resellers made thousands from flipping authentic versions while counterfeit 'Lafufus' flooded the market."],
+   a:"Fake/counterfeit Labubu dolls"},
+
+  {q:"The 'six seven' slang phrase went massively viral in 2025 to the point where a fast food chain removed the number '67' from their order ticket system. Which chain?",
+   clues:["The restaurant is famous for its burgers, Animal Style fries, and its secret menu.",
+          "It's a US West Coast chain known for fresh beef burgers and is privately owned.",
+          "In-N-Out Burger reportedly removed the number because the viral slang phrase had become too associated with chaos."],
+   a:"In-N-Out Burger"},
+
+  // ── MUSIC (10) ────────────────────────────────
+  {q:"The most-saved TikTok track of 2025 was a wistful electronic anthem for breakups and glow-ups with over 21 billion views. What was it called?",
+   clues:["The song became synonymous with personal reinvention montages and breakup reels on TikTok.",
+          "Its title references reconnecting with friends after a relationship ends — a classic bittersweet concept.",
+          "It was described as an 'electronic anthem' and dominated Reels and TikTok all year."],
+   a:"'Back to Friends'"},
+
+  {q:"Kendrick Lamar's 'Not Like Us' won five Grammy Awards at the 2025 Grammys. Which rapper was the song directed at — and what legal action did he take against Universal Music Group over it?",
+   clues:["The song was a diss track in one of hip-hop's most explosive feuds of 2024.",
+          "The targeted rapper sued Universal Music Group for promoting the song, claiming defamation.",
+          "A federal judge dismissed the defamation suit in October 2025. The targeted rapper's name starts with D."],
+   a:"Drake — sued Universal Music Group for defamation (case dismissed)"},
+
+  {q:"A viral musical mash-up in late 2025 combined two classic rock/pop songs into a bittersweet, cinematic sound that backed countless Instagram Reels. What two songs were fused?",
+   clues:["One song is by Billy Joel and is set in a bar with a piano singalong — its title references musical instruments.",
+          "The second is by Fleetwood Mac and features Stevie Nicks singing about longing and a difficult relationship.",
+          "The fusion of 'Piano Man' and which Fleetwood Mac track created this viral audio moment?"],
+   a:"Billy Joel's 'Piano Man' + Fleetwood Mac's 'Silver Springs'"},
+
+  {q:"Beyoncé won Album of the Year at the 2025 Grammys for which album — a country-crossover record that made her the first artist to win Best Country Album at the Grammys?",
+   clues:["The album was her genre-bending country project released in 2024.",
+          "It featured collaborations with country artists and debuted at number 1 globally.",
+          "The album's name contains the word 'Cowboy' and references a part of the southern USA."],
+   a:"Cowboy Carter"},
+
+  {q:"This streaming stat defines Taylor Swift's 2025 album launch: it was the biggest first-week debut in history. Approximately how many units did 'The Life of a Showgirl' sell in its first week?",
+   clues:["The figure is staggering — roughly four times what most platinum albums sell in a month.",
+          "It shattered previous first-week records set by Adele, Drake, and her own earlier albums.",
+          "The exact figure cited was approximately 4 million equivalent album units in the first week."],
+   a:"4 million equivalent album units"},
+
+  {q:"Which British band's world tour in 2025 became the source of two of the year's biggest viral moments — including the Jumbotron cheating scandal and a singalong that opened the year's pop culture calendar?",
+   clues:["The band's frontman is Chris Martin, who has been the band's vocalist since the late 1990s.",
+          "Their tour caused the Jumbotron kiss-cam scandal at Gillette Stadium in July.",
+          "One of their most famous songs is 'Yellow' and their name references both cold temperature and play."],
+   a:"Coldplay"},
+
+  {q:"The 'KPop Demon Hunters' animated film contained a song that topped international charts in 2025. What was the film's signature hit song called?",
+   clues:["The song improbably topped multiple international charts despite coming from an animated Netflix film.",
+          "It landed four simultaneous Top 10 hits on the Billboard Hot 100 — a remarkable feat for an animated soundtrack.",
+          "The song's title is a single word meaning precious or valued — a common word in pop music titles."],
+   a:"'Golden'"},
+
+  {q:"Which Afrobeats/Afrofusion artist released the album 'Love, Damini' and performed at Coachella, cementing himself as Africa's biggest global music export? His hits include 'Last Last' and 'City Boys.'",
+   clues:["His full name is Damini Ebunoluwa Ogulu. His nickname is the 'African Giant.'",
+          "He grew up in Port Harcourt, Nigeria, and has won a Grammy Award.",
+          "He coined his own genre called 'Afrofusion' and his stage name contains the word 'boy.'"],
+   a:"Burna Boy"},
+
+  {q:"Nigeria's Tems won a Grammy in 2024 and collaborated with Wizkid on the massive hit 'Essence.' By 2025, what global milestone had she crossed in terms of Grammy recognition?",
+   clues:["'Essence' featuring Justin Bieber was one of the biggest Afrobeats crossover songs of all time.",
+          "Her full name is Temilade Openiyi, and she is known for a powerful, smoky vocal tone.",
+          "She became the first Nigerian woman to win a Grammy and by 2025 was headlining global festivals solo."],
+   a:"First Nigerian woman to win a Grammy (Best African Music Performance)"},
+
+  {q:"This Kenyan-born artist known globally as Nyashinski had his song 'Bebi Bebi' define an era of Kenyan pop. By 2025, what was his status in the East African music scene?",
+   clues:["He spent years in the US before returning to Kenya and reigniting his career in the 2010s.",
+          "He is considered one of the pioneers of modern Kenyan pop music alongside Sauti Sol.",
+          "His real name is John Nzenze Mũng'ara and he remains one of Kenya's most respected artists."],
+   a:"One of Kenya's most respected and celebrated artists, a pioneer of modern Kenyan pop"}
+],
+
+/* ── KENYA & GLOBAL AFFAIRS: 30 questions ─────────
+   15 Kenya, 5 Africa, 10 World */
+affairs: [
+
+  // ── KENYA (15) ────────────────────────────────
+  {q:"In October 2024, Kenya's parliament impeached and removed the Deputy President. Who was removed and what was he accused of?",
+   clues:["His first name is Rigathi. His surname is Gachagua — a Kikuyu politician from Nyeri County.",
+          "He was accused of corruption, inciting ethnic divisions, and supporting anti-government protests.",
+          "His removal was pushed by President Ruto's allies in parliament and reshaped Kenya's political landscape."],
+   a:"Rigathi Gachagua — accused of corruption and inciting ethnic divisions"},
+
+  {q:"Kenya's Gen Z protests of 2024 began in June. What specific government policy triggered them — and what happened when protesters stormed parliament?",
+   clues:["The trigger was a Finance Bill containing significant tax increases proposed by the Ruto government.",
+          "Tens of thousands took to the streets when parliament passed the bill despite the protests.",
+          "After dozens were killed in police clashes, President Ruto reversed the Finance Bill and reshuffled his cabinet."],
+   a:"The 2024 Finance Bill (tax increases) — Ruto reversed it after deadly protests"},
+
+  {q:"President Ruto claimed in late 2025 that Kenya had risen to become Africa's 6th largest economy. What did he credit for this improvement — and what did inflation drop from and to?",
+   clues:["He pointed to fiscal decisions around debt repayment and reducing expenditure as key factors.",
+          "Kenya's foreign dollar reserves rose to $12.1 billion — described as the highest level in national history.",
+          "Inflation dropped from 9.6% to 4.6%, and the shilling recovered from Ksh.167 to Ksh.129 per dollar."],
+   a:"Debt management decisions — inflation fell from 9.6% to 4.6%, reserves rose to $12.1 billion"},
+
+  {q:"Raila Odinga joined Ruto's broad-based government in 2024, and their parties announced a formal cooperation agreement in early 2025. But a major political event occurred in late 2025 involving Raila. What happened?",
+   clues:["This event caused major reshuffling in his political party, ODM.",
+          "His brother Oburu became the acting party head as a result.",
+          "The 2025 Infotrak poll listed this event as the most significant of the year in Kenya."],
+   a:"Raila Odinga died in late 2025"},
+
+  {q:"Kenya's M-Pesa mobile money platform, launched in 2007 by Safaricom, has reached a massive scale. By 2025, approximately how many people across East Africa use it?",
+   clues:["The figure is in the tens of millions — M-Pesa is described as the world's most successful mobile money system.",
+          "It was originally funded partly by DFID (UK Aid) and was piloted as a small money transfer tool.",
+          "Its name combines 'M' for Mobile and 'Pesa,' the Swahili word for money."],
+   a:"Over 50 million users across Kenya and East Africa"},
+
+  {q:"What is the Social Health Authority (SHA), launched by President Ruto's government in Kenya in 2024/25?",
+   clues:["It replaced the National Hospital Insurance Fund (NHIF) as Kenya's primary health coverage body.",
+          "Enrollment controversies emerged as Kenyans struggled to understand the new system.",
+          "It's described as universal health coverage — the flagship health policy of Ruto's administration."],
+   a:"Kenya's universal health coverage body — replacement for NHIF"},
+
+  {q:"The Hustler Fund, which Ruto calls 'the largest financial inclusion programme since independence,' had disbursed how much money by the end of 2025?",
+   clues:["The fund provides small, accessible loans to Kenyans locked out of formal finance — especially in the informal sector.",
+          "The total disbursed figure is in the tens of billions of Kenyan shillings.",
+          "As of Ruto's late 2025 statements, the fund had disbursed over 80 billion Kenya shillings."],
+   a:"Over Sh80 billion (80 billion Kenya shillings)"},
+
+  {q:"Kenya's inflation rate as of early 2026 was approximately 2.4% — much lower than in 2022/23. What two main cost categories were still driving price increases even at this lower overall rate?",
+   clues:["Despite the low headline rate, household budgets remained strained.",
+          "Food costs have eased from their peak but still contribute to price pressures.",
+          "The other major cost driver affects how people get around daily — think transport and fuel."],
+   a:"Food and housing/transport costs"},
+
+  {q:"Kenya held a state funeral and national mourning period in late 2025 for a former Prime Minister. Who was this person and what was his political legacy?",
+   clues:["He had run for president five times — more than any other Kenyan politician.",
+          "He led the Orange Democratic Movement (ODM) and championed devolution and constitutional reforms.",
+          "He eventually joined forces with his long-time rival William Ruto before his death."],
+   a:"Raila Odinga"},
+
+  {q:"Kenya's Parliament rejected a proposal to create an official 'Leader of the Opposition' role in 2024. Which parliamentary committee made this decision and on what grounds?",
+   clues:["The decision was made by a committee that oversees justice and legal matters in the National Assembly.",
+          "Their argument was that creating such a role would require a constitutional referendum.",
+          "The proposal had come from NADCO — the National Dialogue Committee formed after 2023 protests."],
+   a:"The Justice and Legal Affairs Committee of the National Assembly"},
+
+  {q:"What is Kenya's Nairobi-Mombasa Standard Gauge Railway (SGR) known as — and what city does it connect between?",
+   clues:["It was completed in 2017 and is commonly called by a patriotic Swahili name.",
+          "It runs 472km from Nairobi to Mombasa, passing through Nairobi, Emali, Voi, and Mariakani.",
+          "The train is called the 'Madaraka Express' — named after Kenya's self-rule day."],
+   a:"The Madaraka Express (SGR connecting Nairobi and Mombasa)"},
+
+  {q:"The Kenya Space Agency announced plans in 2025 for what ambitious infrastructure project that would put Kenya on the global space map?",
+   clues:["It's a facility that would allow commercial launches from Kenyan soil.",
+          "Kenya already has the Equatorial Launch Advantage due to its proximity to the equator.",
+          "The agency was seeking a Transaction Advisor for a proposed commercial spaceport project in 2025."],
+   a:"A commercial spaceport in Kenya"},
+
+  {q:"Eliud Kipchoge is the most celebrated Kenyan athlete. As of 2025, what is his world marathon record and where was it set?",
+   clues:["He broke 2 hours in an unofficial exhibition run (INEOS 1:59 Challenge) in Vienna in 2019.",
+          "His official world record was set at the Berlin Marathon — the fastest marathon course in the world.",
+          "His official WR time is 2:00:35, set in Berlin in 2022 — breaking his own previous world record."],
+   a:"2:00:35 — set at the Berlin Marathon in 2022"},
+
+  {q:"Kenya's 2022 presidential election saw William Ruto defeat Raila Odinga. By what margin did Ruto win — and who was Odinga backed by in that election?",
+   clues:["The margin of victory was roughly 1.6 million votes out of approximately 14 million cast.",
+          "Odinga was backed by outgoing President Uhuru Kenyatta, despite Kenyatta previously being Ruto's political ally.",
+          "Ruto ran on a 'Hustler Nation' platform, positioning himself as a candidate of ordinary Kenyans."],
+   a:"Ruto won by ~1.6 million votes; Odinga was backed by outgoing President Uhuru Kenyatta"},
+
+  {q:"What is 'Sheng' and why is it significant to Kenyan urban culture?",
+   clues:["It originated in Nairobi's Eastlands estates and blends Swahili, English, and tribal languages.",
+          "It changes rapidly — words that were cool 5 years ago may already be outdated.",
+          "It is spoken mainly by Nairobi's youth and has become a marker of urban Kenyan identity."],
+   a:"Sheng — Nairobi's unique urban slang language mixing Swahili, English, and tribal languages"},
+
+  // ── AFRICA (5) ────────────────────────────────
+  {q:"In 2025, which African Union Commission leadership bid failed — and which Kenyan politician supported the unsuccessful candidate?",
+   clues:["Kenya's President William Ruto was among the backers of this candidate.",
+          "The candidate had previously served as Kenya's Prime Minister and a long-time opposition leader.",
+          "His bid to lead the African Union Commission ultimately failed — his name is Raila Odinga."],
+   a:"Raila Odinga's failed bid to lead the African Union Commission (backed by Ruto)"},
+
+  {q:"Nigeria's economy overtook South Africa's to become Africa's largest in 2014 after a GDP rebasing. But by 2025, which country had climbed to become the 6th largest in Africa according to IMF projections?",
+   clues:["This country's president claimed the achievement in a late 2025 speech at State House.",
+          "IMF data projected its GDP at $140 billion in 2026 — up from $136 billion in 2025.",
+          "Its capital is Nairobi and its president's name is William Ruto."],
+   a:"Kenya"},
+
+  {q:"Algeria won the 2019 AFCON. Senegal won back-to-back titles in 2021 and 2023. Which country is scheduled to host the 2025 AFCON — and is it the same as 2024?",
+   clues:["The tournament was originally planned for one country but was moved due to infrastructure concerns.",
+          "Morocco has been a frequent host of major tournaments including the 2030 World Cup.",
+          "The 2025 AFCON will be hosted in Morocco — which also co-hosts the 2030 FIFA World Cup with Spain and Portugal."],
+   a:"Morocco"},
+
+  {q:"South Africa's rand currency experienced significant volatility in 2024/25 partly due to political uncertainty. What historic political event happened in South Africa in May 2024?",
+   clues:["The ANC lost its parliamentary majority for the first time since the end of apartheid in 1994.",
+          "This forced the ANC to form a Government of National Unity with other parties.",
+          "Cyril Ramaphosa remained president but now leads a coalition — a first in 30 years of democratic rule."],
+   a:"South Africa's ANC lost its parliamentary majority — first time since 1994 (formed Government of National Unity)"},
+
+  {q:"The African Continental Free Trade Area (AfCFTA) was established to create the world's largest free trade area by number of countries. How many countries signed up and where is the secretariat based?",
+   clues:["The AfCFTA includes virtually every country on the African continent — over 50 nations.",
+          "The secretariat is based in Accra, the capital of Ghana.",
+          "When fully operational it will cover a market of over 1.4 billion people and a GDP of over $3.4 trillion."],
+   a:"54 countries; secretariat in Accra, Ghana"},
+
+  // ── WORLD (10) ────────────────────────────────
+  {q:"Pope Francis passed away in April 2025. Who succeeded him as Pope — and what was historically significant about the new Pope's nationality?",
+   clues:["The new pope's birth name was Robert Frances Prevost. He was 69 years old.",
+          "He attended Villanova University and is a fan of the Chicago White Sox baseball team.",
+          "He is the first American citizen ever to be elected Pope — taking the name Leo XIV."],
+   a:"Pope Leo XIV (Robert Prevost) — first American Pope in history"},
+
+  {q:"The 2025 World Athletics Championships were held in which city — and which country hosted them for the first time?",
+   clues:["The championships ran from September 13-21, 2025.",
+          "The host city is famous for technology, anime, sushi, and the 1964 and 2020 Summer Olympics.",
+          "Japan hosted the event — the first time the World Athletics Championships were held in Tokyo."],
+   a:"Tokyo, Japan"},
+
+  {q:"OpenAI's ChatGPT became a platform that could replicate art styles in 2025, triggering a viral trend. Which specific artistic style dominated the viral trend, and what was the controversy?",
+   clues:["The style belongs to a beloved Japanese animation studio known for films like My Neighbor Totoro.",
+          "Artists and fans argued that OpenAI was profiting from replicating a copyrighted artistic style without permission.",
+          "The studio's name includes the word 'Ghibli' — a reference to a hot Saharan wind."],
+   a:"Studio Ghibli art style — copyright controversy over AI replicating it without permission"},
+
+  {q:"In 2025, TikTok faced a potential US ban due to laws passed under the previous administration. What deal did Trump ultimately strike to prevent a permanent ban?",
+   clues:["Trump delayed the enforcement multiple times before a deal was struck.",
+          "The solution involved changing the ownership structure of TikTok in the US.",
+          "The deal required majority ownership of TikTok's US operations to be transferred to American investors."],
+   a:"Majority ownership of TikTok US transferred to American investors"},
+
+  {q:"The 2026 FIFA World Cup will be held across three countries in North America. Name all three host countries.",
+   clues:["One is the United States — the largest host with the most stadiums.",
+          "The southern neighbour of the US is also a co-host, sharing some stadiums.",
+          "The northern neighbour of the US rounds out the trio — this will be its first World Cup."],
+   a:"USA, Mexico, and Canada"},
+
+  {q:"In 2025, a major legal battle between tech giants concluded: a US federal judge ruled against one company in a landmark antitrust case. Which company was found to have illegally monopolized the search engine market?",
+   clues:["The ruling came in a case brought by the US Department of Justice.",
+          "The company dominates global web search with over 90% market share.",
+          "The ruling found that it paid billions to companies like Apple to be the default search engine — illegally locking out competition."],
+   a:"Google"},
+
+  {q:"Donald Trump returned to the US presidency in January 2025. What is the nickname commonly given to the set of sweeping tariffs he introduced — and which country was hit hardest?",
+   clues:["The tariffs were called 'Liberation Day' tariffs — introduced in April 2025.",
+          "They targeted virtually all US trading partners but China received the steepest rates — above 100%.",
+          "The move triggered global market turbulence and sparked fears of a new trade war."],
+   a:"'Liberation Day' tariffs — China was hit hardest"},
+
+  {q:"Which social media platform saw an explosion of new users in January 2025 when Americans feared TikTok would be banned — and what country owns it?",
+   clues:["It is sometimes called China's Instagram or TikTok alternative.",
+          "American users flooded onto it in protest, calling themselves 'TikTok refugees.'",
+          "Its name in English means 'Little Red Book' — a reference to Mao Zedong's famous publication."],
+   a:"RedNote (Xiaohongshu) — owned by a Chinese company"},
+
+  {q:"What is 'Labubu' — and which three words describe the physical appearance that made it an unlikely global collectible phenomenon in 2025?",
+   clues:["It's a fictional character from 'The Monsters' toy series by Hong Kong-based artist Kasing Lung.",
+          "The toy was described by media as 'ugly,' 'toothy,' and 'slightly creepy' — part of its counter-intuitive appeal.",
+          "It's sold in blind boxes by Pop Mart and became one of the most resold items of 2025."],
+   a:"A toothy, slightly ugly plush toy sold in blind boxes — its unusual look was part of the appeal"},
+
+  {q:"Meta's AI assistant became widely available across WhatsApp and Instagram in 2025. What is the name of Meta's AI model that powers it, and who is the CEO of Meta?",
+   clues:["The AI model is called Llama — Meta's open-source large language model.",
+          "Meta's AI was integrated into WhatsApp, Instagram, Messenger, and Facebook.",
+          "The CEO of Meta famously testified before the US Senate in 2023 about social media's impact on children."],
+   a:"Llama (Meta AI) — Mark Zuckerberg is CEO"}
+]
+};
+
+// ═══════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════
+const CATS = ['sports','culture','affairs'];
+const QLIMIT = 5;
+const TEAM_COLORS = ['#00e5ff','#ff6b35','#39ff14','#ffd700','#c77dff','#ff006e'];
+const TDOT_CLASSES = ['','f','c','w','x','y'];
+
+let teams = [], scores = {}, catScores = {}, teamQueues = {}, teamCatCount = {};
+let currentTeam = 0, lastCat = null, curCat = null, curQ = null;
+let ansShown = false, timedOut = false;
+let timerID = null, timeLeft = 60;
+let totalQ = 0;
+
+// ── SHUFFLE ──
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// ── BUILD NON-OVERLAPPING QUEUES ──
+// Each team gets a unique slice of each category's shuffled question pool.
+// With 30 Qs per cat and max 6 teams × 5 Qs = 30 — perfect coverage.
+function buildQueues(teamList) {
+  const queues = {};
+  CATS.forEach(cat => {
+    const pool = shuffle(QBANK[cat]);
+    teamList.forEach((t, i) => {
+      if (!queues[t]) queues[t] = {};
+      queues[t][cat] = pool.slice(i * QLIMIT, (i+1) * QLIMIT);
+      if (queues[t][cat].length < QLIMIT) {
+        queues[t][cat] = shuffle(QBANK[cat]).slice(0, QLIMIT);
+      }
+    });
+  });
+  return queues;
+}
+
+// ═══════════════════════════════════════════════
+// SETUP SCREEN
+// ═══════════════════════════════════════════════
+function renderTeamInputs() {
+  const c = document.getElementById('team-inputs');
+  c.innerHTML = '';
+  teams.forEach((name, i) => {
+    const row = document.createElement('div');
+    row.className = 'team-row';
+    row.innerHTML = `
+      <div class="t-dot" style="background:${TEAM_COLORS[i]||'#ffffff'}"></div>
+      <input class="team-input" value="${name}" placeholder="Team ${i+1}" maxlength="18"
+        oninput="teams[${i}]=this.value.trim()||'Team ${i+1}'">
+      ${teams.length > 2 ? `<button class="remove-btn" onclick="removeTeam(${i})">✕</button>` : ''}
+    `;
+    c.appendChild(row);
+  });
+  document.getElementById('add-btn').style.display = teams.length >= 6 ? 'none' : '';
+}
+
+function removeTeam(idx) {
+  teams.splice(idx, 1);
+  renderTeamInputs();
+}
+
+document.getElementById('add-btn').addEventListener('click', () => {
+  if (teams.length >= 6) return;
+  teams.push(`Team ${teams.length + 1}`);
+  renderTeamInputs();
+});
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  // Capture current input values
+  document.querySelectorAll('.team-input').forEach((el, i) => {
+    teams[i] = el.value.trim() || `Team ${i+1}`;
+  });
+
+  teamQueues = buildQueues(teams);
+  teams.forEach(t => {
+    scores[t] = 0;
+    catScores[t] = {sports:0, culture:0, affairs:0};
+    teamCatCount[t] = {sports:0, culture:0, affairs:0};
+  });
+  totalQ = 0;
+  lastCat = null;
+  currentTeam = 0;
+  showCatPick();
+});
+
+// Init with 2 teams
+teams = ['Team 1', 'Team 2'];
+renderTeamInputs();
+
+// ═══════════════════════════════════════════════
+// CATEGORY PICK
+// ═══════════════════════════════════════════════
+function showCatPick() {
+  const t = teams[currentTeam];
+  document.getElementById('cp-team').textContent = t;
+  document.getElementById('cp-team').style.color = TEAM_COLORS[currentTeam] || 'var(--white)';
+  document.getElementById('cp-hint').textContent = `QUESTION SET — PICK YOUR CATEGORY`;
+
+  CATS.forEach(cat => {
+    const card = document.querySelector(`.cat-card.${cat}`);
+    const done = teamCatCount[t][cat];
+    const pct = (done / QLIMIT) * 100;
+    document.getElementById(`bar-${cat}`).style.width = pct + '%';
+    document.getElementById(`prog-${cat}`).textContent = `${done} / ${QLIMIT} done`;
+    card.classList.remove('blocked');
+    // Block if exhausted OR same as last picked
+    if (done >= QLIMIT || cat === lastCat) card.classList.add('blocked');
+  });
+
+  showScreen('cat-pick');
+}
+
+document.querySelectorAll('.cat-card').forEach(card => {
+  card.addEventListener('click', () => {
+    if (card.classList.contains('blocked')) return;
+    startQuestion(card.dataset.cat);
+  });
+});
+
+// ═══════════════════════════════════════════════
+// QUESTION
+// ═══════════════════════════════════════════════
+function startQuestion(cat) {
+  curCat = cat;
+  const t = teams[currentTeam];
+  curQ = teamQueues[t][cat].shift();
+  if (!curQ) { showToast('No more questions!','neutral'); return; }
+
+  ansShown = false;
+  timedOut = false;
+
+  // Badge
+  const badge = document.getElementById('q-badge');
+  badge.className = `q-badge ${cat}`;
+  badge.textContent = cat === 'sports' ? '⚽🏃 Sports & Football' :
+                      cat === 'culture' ? '🎵🎬 Pop Culture & Music' :
+                      '🌍📱 Kenya & Global Affairs';
+
+  document.getElementById('q-team-name').textContent = t;
+  document.getElementById('q-team-name').style.color = TEAM_COLORS[currentTeam] || 'var(--white)';
+  document.getElementById('q-num').textContent = `QUESTION ${teamCatCount[t][cat]+1} / ${QLIMIT}`;
+  document.getElementById('q-text').textContent = curQ.q;
+
+  // Clue tooltips
+  for (let i = 1; i <= 3; i++) {
+    const tip = document.getElementById(`ctip${i}`);
+    const btn = document.getElementById(`cbtn${i}`);
+    const wrap = document.getElementById(`cwrap${i}`);
+    tip.textContent = curQ.clues[i-1];
+    tip.classList.remove('force-close');
+    btn.classList.remove('opened');
+    // Mark as "opened" when hovered first time
+    wrap.onmouseenter = () => btn.classList.add('opened');
+  }
+
+  // Double-click to close tooltip
+  document.querySelectorAll('.clue-btn').forEach((btn, idx) => {
+    btn.ondblclick = (e) => {
+      e.stopPropagation();
+      const tip = document.getElementById(`ctip${idx+1}`);
+      tip.classList.add('force-close');
+      setTimeout(() => tip.classList.remove('force-close'), 500);
+    };
+  });
+
+  document.getElementById('ans-hidden').style.display = 'block';
+  document.getElementById('ans-shown').style.display = 'none';
+  document.getElementById('ans-text').textContent = curQ.a;
+
+  document.getElementById('btn-correct').disabled = true;
+  document.getElementById('btn-wrong').disabled = true;
+  document.getElementById('btn-none').disabled = true;
+
+  startTimer();
+  showScreen('question-screen');
+}
+
+function startTimer() {
+  clearInterval(timerID);
+  timeLeft = 60;
+  updateTimer();
+  timerID = setInterval(() => {
+    timeLeft--;
+    updateTimer();
+    if (timeLeft <= 0) {
+      clearInterval(timerID);
+      timedOut = true;
+      revealAnswer();
+      showToast("⏰ TIME'S UP — 0 pts", 'neutral');
+      enableResults();
+    }
+  }, 1000);
+}
+
+function updateTimer() {
+  document.getElementById('timer-num').textContent = timeLeft;
+  const circ = document.getElementById('timer-circle');
+  const offset = 226 - (226 * timeLeft / 60);
+  circ.style.strokeDashoffset = offset;
+  circ.style.stroke = timeLeft > 20 ? 'var(--affairs)' :
+                      timeLeft > 10 ? 'var(--culture)' : 'var(--sports)';
+}
+
+function revealAnswer() {
+  if (ansShown) return;
+  ansShown = true;
+  clearInterval(timerID);
+  document.getElementById('ans-hidden').style.display = 'none';
+  document.getElementById('ans-shown').style.display = 'block';
+  enableResults();
+}
+
+function enableResults() {
+  document.getElementById('btn-correct').disabled = false;
+  document.getElementById('btn-wrong').disabled = false;
+  document.getElementById('btn-none').disabled = false;
+}
+
+function scoreIt(pts) {
+  clearInterval(timerID);
+  const t = teams[currentTeam];
+  if (timedOut && pts !== 0) { pts = 0; showToast("Time's up — 0 pts only",'neutral'); }
+  scores[t] += pts;
+  catScores[t][curCat] += pts;
+  teamCatCount[t][curCat]++;
+  lastCat = curCat;
+  totalQ++;
+  currentTeam = (currentTeam + 1) % teams.length;
+
+  if (pts === 1) showToast(`✅ CORRECT! +1 for ${t}`, 'good');
+  else if (pts === -1) showToast(`❌ WRONG! −1 for ${t}`, 'bad');
+  else showToast(`⏱ 0 points`, 'neutral');
+
+  const gameOver = teams.every(t2 => CATS.every(c => teamCatCount[t2][c] >= QLIMIT));
+  showScoreboard(gameOver);
+}
+
+// ═══════════════════════════════════════════════
+// SCOREBOARD
+// ═══════════════════════════════════════════════
+function showScoreboard(isEnd = false) {
+  const total = teams.length * QLIMIT;
+  CATS.forEach(c => {
+    const done = teams.reduce((s,t) => s + teamCatCount[t][c], 0);
+    const pct = Math.min(100, (done/total)*100);
+    const key = c[0];
+    document.getElementById(`pfill-${c}`).style.width = pct + '%';
+    document.getElementById(`pcnt-${c}`).textContent = `${done}/${total}`;
+  });
+
+  document.getElementById('sb-sub').textContent = isEnd ? 'FINAL SCORES' : `After ${totalQ} question${totalQ!==1?'s':''}`;
+
+  const sorted = [...teams].sort((a,b) => scores[b]-scores[a]);
+  const rows = document.getElementById('sb-rows');
+  rows.innerHTML = '';
+  sorted.forEach((t, i) => {
+    const row = document.createElement('div');
+    row.className = 'sb-row';
+    const tot = scores[t];
+    const col = tot > 0 ? 'var(--affairs)' : tot < 0 ? 'var(--culture)' : 'var(--white)';
+    const sign = v => (v >= 0 ? '+' : '') + v;
+    row.innerHTML = `
+      <span class="sb-rank ${i===0?'top':''}">${i===0?'🥇':i+1}</span>
+      <span class="sb-name">${t}</span>
+      <span class="sb-s">${sign(catScores[t].sports)}</span>
+      <span class="sb-c">${sign(catScores[t].culture)}</span>
+      <span class="sb-a">${sign(catScores[t].affairs)}</span>
+      <span class="sb-tot" style="color:${col}">${sign(tot)}</span>
+    `;
+    rows.appendChild(row);
+  });
+
+  const btn = document.getElementById('sb-next');
+  if (isEnd) {
+    btn.textContent = 'SEE WINNER 🏆';
+    btn.onclick = endGame;
+  } else {
+    btn.textContent = 'NEXT TURN →';
+    btn.onclick = showCatPick;
+  }
+  showScreen('scoreboard');
+}
+
+function endGame() {
+  const sorted = [...teams].sort((a,b) => scores[b]-scores[a]);
+  const winner = sorted[0];
+  document.getElementById('w-name').textContent = winner;
+  const tot = scores[winner];
+  document.getElementById('w-pts').textContent = `${tot >= 0 ? '+':''}${tot} points total`;
+  const board = document.getElementById('w-board');
+  board.innerHTML = '';
+  sorted.forEach((t, i) => {
+    const row = document.createElement('div');
+    row.className = 'w-row';
+    const v = scores[t];
+    row.innerHTML = `<span class="w-rname">${i===0?'🥇 ':''}${t}</span><span class="w-rpts" style="color:${v>=0?'var(--affairs)':'var(--culture)'}">${v>=0?'+':''}${v}</span>`;
+    board.appendChild(row);
+  });
+  showScreen('winner-screen');
+  confetti();
+}
+
+function resetAll() {
+  scores = {}; catScores = {}; teamQueues = {}; teamCatCount = {};
+  totalQ = 0; currentTeam = 0; lastCat = null;
+  teams = ['Team 1', 'Team 2'];
+  renderTeamInputs();
+  showScreen('setup');
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+let toastTimer;
+function showToast(msg, type = 'neutral') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function confetti() {
+  const cols = ['#ffd700','#ff6b35','#00e5ff','#39ff14','#c77dff','#ff006e'];
+  for (let i = 0; i < 120; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'cp';
+      el.style.cssText = `left:${Math.random()*100}vw;width:${5+Math.random()*9}px;height:${5+Math.random()*9}px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${1.4+Math.random()*2.5}s;animation-delay:${Math.random()*.7}s;`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }, i * 22);
+  }
+}
+</script>
+</body>
+</html>
