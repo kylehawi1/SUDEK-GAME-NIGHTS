@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUIZ NIGHT 🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08080e;--card:#111118;--card2:#1a1a25;--music:#ff2d55;--football:#0aff6e;--culture:#ffd000;--white:#f2f0ff;--dim:#44445a;--glow-m:0 0 35px #ff2d5570;--glow-f:0 0 35px #0aff6e70;--glow-c:0 0 35px #ffd00070;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
+.noise{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.5;}
+#app{position:relative;z-index:1;}
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+#setup{align-items:center;justify-content:center;padding:2rem;text-align:center;background:radial-gradient(ellipse at 50% -10%,#1f0030 0%,var(--bg) 55%);}
+.logo{font-family:'Bebas Neue';font-size:clamp(5rem,18vw,10rem);line-height:.85;letter-spacing:6px;background:linear-gradient(140deg,var(--music) 0%,var(--culture) 50%,var(--football) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 50px #ff2d5540);animation:logoPulse 4s ease-in-out infinite;}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 50px #ff2d5540);}50%{filter:drop-shadow(0 0 80px #ffd00050);}}
+.logo-sub{font-family:'Syne',sans-serif;font-size:.75rem;letter-spacing:8px;color:var(--dim);margin:.5rem 0 3rem;text-transform:uppercase;}
+.setup-card{background:var(--card);border:1px solid #ffffff12;border-radius:20px;padding:2rem;width:100%;max-width:480px;margin-bottom:2rem;}
+.setup-card h3{font-family:'Syne',sans-serif;font-size:.7rem;letter-spacing:5px;color:var(--dim);text-transform:uppercase;margin-bottom:1.5rem;}
+.team-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.8rem;}
+.team-dot{width:10px;height:10px;border-radius:50%;background:var(--music);}
+.team-dot.f{background:var(--football);}
+.team-dot.c{background:var(--culture);}
+.team-dot.w{background:#7c4dff;}
+.team-dot.x{background:#00b0ff;}
+.team-dot.y{background:#ff6d00;}
+.team-input{flex:1;background:#ffffff07;border:1px solid #ffffff18;border-radius:10px;padding:.7rem 1rem;color:var(--white);font-family:'Space Mono';font-size:.82rem;outline:none;transition:border-color .2s,background .2s;}
+.team-input:focus{border-color:var(--music);background:#ffffff0d;}
+.add-btn{width:100%;background:none;border:1px dashed #ffffff18;border-radius:10px;padding:.7rem;color:var(--dim);font-family:'Space Mono';font-size:.75rem;cursor:pointer;transition:all .2s;letter-spacing:2px;margin-top:.5rem;}
+.add-btn:hover{border-color:var(--white);color:var(--white);}
+.start-btn{background:linear-gradient(135deg,var(--music),#900020);border:none;border-radius:14px;padding:1.2rem 4.5rem;font-family:'Bebas Neue';font-size:2rem;letter-spacing:4px;color:#fff;cursor:pointer;box-shadow:var(--glow-m);transition:transform .15s,box-shadow .15s;}
+.start-btn:hover{transform:scale(1.04);box-shadow:0 0 60px #ff2d5590;}
+.start-btn:active{transform:scale(.97);}
+
+#genre-pick{align-items:center;justify-content:center;padding:2rem;text-align:center;background:var(--bg);}
+.gp-top{margin-bottom:2.5rem;}
+.gp-turn-label{font-family:'Syne',sans-serif;font-size:.7rem;letter-spacing:6px;color:var(--dim);text-transform:uppercase;margin-bottom:.4rem;}
+.gp-team{font-family:'Bebas Neue';font-size:clamp(2.5rem,10vw,5rem);letter-spacing:3px;line-height:1;}
+.gp-meta{font-size:.7rem;color:var(--dim);letter-spacing:3px;margin-top:.5rem;}
+.genre-grid{display:flex;flex-wrap:wrap;gap:1.2rem;justify-content:center;max-width:680px;}
+.gc{flex:1;min-width:170px;max-width:200px;background:var(--card);border:2px solid #ffffff10;border-radius:22px;padding:2rem 1.2rem;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+.gc::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;}
+.gc.music::after{background:radial-gradient(circle at 50% 0%,#ff2d5520,transparent 70%);}
+.gc.football::after{background:radial-gradient(circle at 50% 0%,#0aff6e20,transparent 70%);}
+.gc.culture::after{background:radial-gradient(circle at 50% 0%,#ffd00020,transparent 70%);}
+.gc:hover::after{opacity:1;}
+.gc.music:hover{border-color:var(--music);box-shadow:var(--glow-m);transform:translateY(-5px);}
+.gc.football:hover{border-color:var(--football);box-shadow:var(--glow-f);transform:translateY(-5px);}
+.gc.culture:hover{border-color:var(--culture);box-shadow:var(--glow-c);transform:translateY(-5px);}
+.gc.blocked{opacity:.2;pointer-events:none;}
+.gc-icon{font-size:2.8rem;margin-bottom:.8rem;}
+.gc-name{font-family:'Bebas Neue';font-size:1.5rem;letter-spacing:2px;margin-bottom:.3rem;}
+.gc.music .gc-name{color:var(--music);}
+.gc.football .gc-name{color:var(--football);}
+.gc.culture .gc-name{color:var(--culture);}
+.gc-bar{height:5px;background:#ffffff0f;border-radius:3px;margin-top:1rem;overflow:hidden;}
+.gc-bar-fill{height:100%;border-radius:3px;transition:width .4s;}
+.gc.music .gc-bar-fill{background:var(--music);}
+.gc.football .gc-bar-fill{background:var(--football);}
+.gc.culture .gc-bar-fill{background:var(--culture);}
+.gc-prog{font-size:.65rem;color:var(--dim);letter-spacing:2px;margin-top:.5rem;}
+
+#question-screen{padding:1.2rem;}
+.qh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.7rem;}
+.q-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:100px;font-family:'Syne';font-size:.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;}
+.q-badge.music{background:#ff2d5518;color:var(--music);border:1px solid #ff2d5535;}
+.q-badge.football{background:#0aff6e18;color:var(--football);border:1px solid #0aff6e35;}
+.q-badge.culture{background:#ffd00018;color:var(--culture);border:1px solid #ffd00035;}
+.q-teamname{font-family:'Syne';font-size:.85rem;font-weight:700;}
+.timer-area{display:flex;justify-content:center;margin-bottom:1.2rem;}
+.timer-ring{position:relative;width:90px;height:90px;}
+.timer-ring svg{transform:rotate(-90deg);}
+.timer-ring circle{fill:none;stroke-width:5;stroke-linecap:round;}
+.tbg{stroke:#ffffff0e;}
+.tfg{stroke:var(--football);stroke-dasharray:251;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .5s;}
+.tnum{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:2rem;}
+
+.q-card{background:var(--card);border:1px solid #ffffff10;border-radius:18px;padding:1.8rem;margin-bottom:1.2rem;max-width:680px;margin-left:auto;margin-right:auto;position:relative;overflow:hidden;}
+.q-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,#ffffff05,transparent 60%);pointer-events:none;}
+.q-qnum{font-size:.65rem;letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-bottom:.6rem;}
+.ogog-tag{display:inline-block;font-family:'Syne';font-size:.6rem;font-weight:800;letter-spacing:4px;text-transform:uppercase;padding:.25rem .7rem;border-radius:6px;margin-bottom:.8rem;background:linear-gradient(135deg,var(--music),var(--culture));color:#000;}
+.ogog-hook{font-family:'Syne';font-size:clamp(.95rem,2.2vw,1.15rem);font-weight:800;line-height:1.55;color:var(--white);margin-bottom:.6rem;}
+.ogog-ask{font-family:'Bebas Neue';font-size:clamp(1.3rem,3.5vw,1.7rem);letter-spacing:2px;color:var(--culture);margin-top:.6rem;}
+
+.clues-wrap{max-width:680px;margin:0 auto 1rem;}
+.clues-lbl{font-size:.65rem;letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-bottom:.6rem;}
+.clue-row{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.6rem;}
+.clue-n{font-family:'Bebas Neue';font-size:1.1rem;min-width:22px;opacity:.35;}
+.clue-b{flex:1;background:#ffffff07;border:1px solid #ffffff10;border-radius:9px;padding:.65rem .9rem;font-size:.8rem;line-height:1.5;opacity:0;transform:translateX(-8px);transition:opacity .35s,transform .35s;}
+.clue-b.show{opacity:1;transform:translateX(0);}
+.reveal-btn{display:block;margin:0 auto .8rem;background:none;border:1px solid #ffffff20;border-radius:9px;padding:.65rem 1.8rem;color:var(--white);font-family:'Space Mono';font-size:.75rem;cursor:pointer;letter-spacing:2px;transition:all .2s;}
+.reveal-btn:hover{background:#ffffff0d;border-color:#ffffff45;}
+.reveal-btn:disabled{opacity:.25;cursor:default;}
+.ans-wrap{max-width:680px;margin:0 auto .8rem;}
+.ans-hidden{background:var(--card);border:1px dashed #ffffff18;border-radius:12px;padding:1.3rem;text-align:center;cursor:pointer;color:var(--dim);font-size:.8rem;letter-spacing:2px;transition:all .2s;}
+.ans-hidden:hover{border-color:#ffffff45;color:var(--white);}
+.ans-shown{background:#0aff6e12;border:1px solid #0aff6e30;border-radius:12px;padding:1.3rem;text-align:center;display:none;}
+.ans-lbl{font-size:.65rem;letter-spacing:4px;color:var(--football);text-transform:uppercase;margin-bottom:.4rem;}
+.ans-text{font-family:'Bebas Neue';font-size:1.9rem;letter-spacing:2px;color:var(--football);}
+.result-row{display:flex;gap:.8rem;justify-content:center;max-width:680px;margin:0 auto;flex-wrap:wrap;}
+.rb{flex:1;min-width:130px;border:2px solid;border-radius:12px;padding:.9rem .5rem;font-family:'Bebas Neue';font-size:1.2rem;letter-spacing:2px;cursor:pointer;transition:all .15s;background:none;}
+.rb:disabled{opacity:.3;cursor:default;}
+.rb.correct{color:var(--football);border-color:var(--football);}
+.rb.correct:not(:disabled):hover{background:var(--football);color:#000;box-shadow:var(--glow-f);}
+.rb.wrong{color:var(--music);border-color:var(--music);}
+.rb.wrong:not(:disabled):hover{background:var(--music);color:#fff;box-shadow:var(--glow-m);}
+.rb.timeout{color:var(--culture);border-color:var(--culture);}
+.rb.timeout:not(:disabled):hover{background:var(--culture);color:#000;box-shadow:var(--glow-c);}
+
+#scoreboard{padding:1.5rem;max-width:800px;margin:0 auto;}
+.sb-title{font-family:'Bebas Neue';font-size:2.8rem;letter-spacing:4px;text-align:center;background:linear-gradient(135deg,var(--music),var(--culture));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sb-sub{font-size:.65rem;letter-spacing:4px;color:var(--dim);text-align:center;margin-bottom:1.5rem;text-transform:uppercase;}
+.sb-table{background:var(--card);border-radius:16px;overflow:hidden;border:1px solid #ffffff0d;margin-bottom:1.5rem;}
+.sb-row{display:grid;grid-template-columns:28px 1fr 50px 50px 50px 60px;gap:.5rem;padding:.9rem 1.2rem;align-items:center;border-bottom:1px solid #ffffff07;}
+.sb-row:last-child{border-bottom:none;}
+.sb-row.hdr{font-size:.6rem;letter-spacing:3px;color:var(--dim);text-transform:uppercase;}
+.sb-rank{font-family:'Bebas Neue';font-size:1.3rem;color:var(--dim);}
+.sb-rank.top{color:var(--culture);}
+.sb-name{font-family:'Syne';font-weight:700;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-m{font-family:'Bebas Neue';font-size:1.2rem;color:var(--music);text-align:center;}
+.sb-f{font-family:'Bebas Neue';font-size:1.2rem;color:var(--football);text-align:center;}
+.sb-c{font-family:'Bebas Neue';font-size:1.2rem;color:var(--culture);text-align:center;}
+.sb-tot{font-family:'Bebas Neue';font-size:1.5rem;text-align:center;}
+.sb-progress{background:var(--card2);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.5rem;}
+.sb-progress-title{font-size:.65rem;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:.8rem;}
+.prog-row{display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem;}
+.prog-label{font-size:.7rem;min-width:70px;color:var(--dim);}
+.prog-bar{flex:1;height:6px;background:#ffffff08;border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width .4s;}
+.prog-fill.m{background:var(--music);}
+.prog-fill.f{background:var(--football);}
+.prog-fill.c{background:var(--culture);}
+.prog-count{font-family:'Bebas Neue';font-size:.9rem;color:var(--dim);min-width:45px;text-align:right;}
+.sb-actions{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;}
+.sb-btn{padding:1rem 2.2rem;border-radius:12px;font-family:'Bebas Neue';font-size:1.3rem;letter-spacing:2px;cursor:pointer;border:none;transition:all .2s;}
+.sb-cont{background:var(--football);color:#000;}
+.sb-cont:hover{box-shadow:var(--glow-f);transform:scale(1.04);}
+.sb-end{background:#ffffff12;color:var(--white);border:1px solid #ffffff20;}
+.sb-end:hover{background:#ffffff20;}
+
+#winner-screen{align-items:center;justify-content:center;text-align:center;padding:2rem;background:radial-gradient(ellipse at 50% 40%,#1a1200 0%,var(--bg) 65%);}
+.trophy{font-size:5rem;margin-bottom:.8rem;animation:trophyBounce 1.2s ease-in-out infinite;}
+@keyframes trophyBounce{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-18px) rotate(5deg);}}
+.w-label{font-size:.7rem;letter-spacing:6px;color:var(--dim);text-transform:uppercase;margin-bottom:.3rem;}
+.w-name{font-family:'Bebas Neue';font-size:clamp(3rem,14vw,8rem);letter-spacing:4px;line-height:1;background:linear-gradient(135deg,var(--culture),#ff8800);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.w-score{font-family:'Space Mono';font-size:.9rem;color:var(--dim);margin:.5rem 0 2.5rem;}
+.w-board{background:var(--card);border-radius:16px;overflow:hidden;width:100%;max-width:450px;margin-bottom:2rem;}
+.w-row{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1.2rem;border-bottom:1px solid #ffffff07;}
+.w-row:last-child{border-bottom:none;}
+.w-rname{font-family:'Syne';font-weight:700;font-size:.85rem;}
+.w-rpts{font-family:'Bebas Neue';font-size:1.4rem;}
+.play-again{background:linear-gradient(135deg,var(--culture),#cc7700);border:none;border-radius:14px;padding:1.1rem 3rem;font-family:'Bebas Neue';font-size:1.7rem;letter-spacing:3px;color:#000;cursor:pointer;box-shadow:var(--glow-c);transition:transform .15s;}
+.play-again:hover{transform:scale(1.05);}
+
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid #ffffff20;border-radius:100px;padding:.7rem 1.4rem;font-size:.75rem;letter-spacing:2px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+.toast.good{border-color:#0aff6e50;color:var(--football);}
+.toast.bad{border-color:#ff2d5550;color:var(--music);}
+.toast.neutral{border-color:#ffd00050;color:var(--culture);}
+
+.cp{position:fixed;border-radius:3px;animation:fall linear forwards;pointer-events:none;z-index:100;}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(800deg);opacity:0;}}
+
+#reaction-overlay{
+  position:fixed;inset:0;z-index:500;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2rem;text-align:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .35s;
+}
+#reaction-overlay.show{opacity:1;pointer-events:all;}
+#reaction-overlay.correct-mode{background:radial-gradient(ellipse at 50% 30%,#001a0a,#08080e 70%);}
+#reaction-overlay.wrong-mode{background:radial-gradient(ellipse at 50% 30%,#1a0008,#08080e 70%);}
+#reaction-canvas{position:absolute;inset:0;pointer-events:none;}
+.react-emoji{font-size:clamp(4rem,15vw,7rem);animation:reactBounce 0.6s cubic-bezier(.36,.07,.19,.97) both;margin-bottom:.5rem;position:relative;z-index:2;}
+@keyframes reactBounce{0%{transform:scale(0) rotate(-20deg);}60%{transform:scale(1.2) rotate(5deg);}80%{transform:scale(.9) rotate(-2deg);}100%{transform:scale(1) rotate(0deg);}}
+.react-tag{font-family:'Syne';font-size:.65rem;font-weight:800;letter-spacing:5px;text-transform:uppercase;padding:.3rem .9rem;border-radius:6px;margin-bottom:1rem;position:relative;z-index:2;}
+.correct-mode .react-tag{background:#0aff6e22;color:var(--football);border:1px solid #0aff6e40;}
+.wrong-mode .react-tag{background:#ff2d5522;color:var(--music);border:1px solid #ff2d5540;}
+.react-headline{font-family:'Bebas Neue';font-size:clamp(2rem,8vw,4rem);letter-spacing:3px;line-height:1.1;margin-bottom:.7rem;position:relative;z-index:2;}
+.correct-mode .react-headline{color:var(--football);text-shadow:0 0 40px #0aff6e60;}
+.wrong-mode .react-headline{color:var(--music);text-shadow:0 0 40px #ff2d5560;}
+.react-sub{font-family:'Space Mono';font-size:clamp(.75rem,2vw,.9rem);color:var(--dim);line-height:1.7;max-width:480px;margin:0 auto 1.5rem;position:relative;z-index:2;}
+.pts-bubble{display:inline-block;padding:.6rem 2rem;border-radius:100px;font-family:'Bebas Neue';font-size:1.8rem;letter-spacing:3px;margin-bottom:2rem;position:relative;z-index:2;animation:ptsIn .5s .3s both cubic-bezier(.22,1,.36,1);}
+@keyframes ptsIn{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.correct-mode .pts-bubble{background:linear-gradient(135deg,#0aff6e,#00cc55);color:#000;box-shadow:0 0 40px #0aff6e50;}
+.wrong-mode .pts-bubble{background:linear-gradient(135deg,#ff2d55,#aa0022);color:#fff;box-shadow:0 0 40px #ff2d5550;}
+.react-continue{background:none;border:1px solid #ffffff25;border-radius:10px;padding:.8rem 2.5rem;color:var(--white);font-family:'Bebas Neue';font-size:1.4rem;letter-spacing:3px;cursor:pointer;transition:all .2s;position:relative;z-index:2;}
+.react-continue:hover{background:#ffffff10;border-color:#ffffff55;}
+.score-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue';font-size:5rem;letter-spacing:4px;pointer-events:none;z-index:501;animation:scoreFlashAnim .8s forwards;}
+@keyframes scoreFlashAnim{0%{opacity:1;transform:translate(-50%,-50%) scale(.5);}30%{opacity:1;transform:translate(-50%,-50%) scale(1.3);}60%{opacity:1;transform:translate(-50%,-50%) scale(1);}100%{opacity:0;transform:translate(-50%,-80%) scale(.8);}}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div id="app">
+
+<div class="screen active" id="setup">
+  <div class="logo">QUIZ<br>NIGHT</div>
+  <div class="logo-sub">🎵 Music &nbsp;·&nbsp; ⚽ Football &nbsp;·&nbsp; 🌍 Culture</div>
+  <div class="setup-card">
+    <h3>Team Names (2–6 teams) · 10 questions per genre each</h3>
+    <div id="team-inputs">
+      <div class="team-row"><div class="team-dot"></div><input class="team-input" placeholder="Team 1" maxlength="18"></div>
+      <div class="team-row"><div class="team-dot f"></div><input class="team-input" placeholder="Team 2" maxlength="18"></div>
+    </div>
+    <button class="add-btn" id="add-btn">+ ADD ANOTHER TEAM</button>
+  </div>
+  <button class="start-btn" id="start-btn">LET'S GO</button>
+</div>
+
+<div class="screen" id="genre-pick">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;">
+    <div class="gp-top">
+      <div class="gp-turn-label">It's your turn</div>
+      <div class="gp-team" id="gp-team">Team 1</div>
+      <div class="gp-meta" id="gp-meta">PICK A GENRE</div>
+    </div>
+    <div class="genre-grid">
+      <div class="gc music" data-g="music">
+        <div class="gc-icon">🎵</div>
+        <div class="gc-name">Music</div>
+        <div class="gc-bar"><div class="gc-bar-fill" id="bar-music" style="width:0%"></div></div>
+        <div class="gc-prog" id="prog-music">0 / 10 done</div>
+      </div>
+      <div class="gc football" data-g="football">
+        <div class="gc-icon">⚽</div>
+        <div class="gc-name">Football</div>
+        <div class="gc-bar"><div class="gc-bar-fill" id="bar-football" style="width:0%"></div></div>
+        <div class="gc-prog" id="prog-football">0 / 10 done</div>
+      </div>
+      <div class="gc culture" data-g="culture">
+        <div class="gc-icon">🌍</div>
+        <div class="gc-name">Culture</div>
+        <div class="gc-bar"><div class="gc-bar-fill" id="bar-culture" style="width:0%"></div></div>
+        <div class="gc-prog" id="prog-culture">0 / 10 done</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="question-screen">
+  <div class="qh">
+    <div class="q-badge music" id="q-badge">🎵 Music</div>
+    <div class="q-teamname" id="q-teamname">Team 1</div>
+  </div>
+  <div class="timer-area">
+    <div class="timer-ring">
+      <svg width="90" height="90" viewBox="0 0 90 90">
+        <circle class="tbg" cx="45" cy="45" r="40"/>
+        <circle class="tfg" id="tc" cx="45" cy="45" r="40"/>
+      </svg>
+      <div class="tnum" id="tnum">60</div>
+    </div>
+  </div>
+  <div class="q-card">
+    <div class="q-qnum" id="q-qnum">QUESTION 1 OF 10</div>
+    <div class="ogog-tag" id="ogog-tag">🧨 Admit it or deny it</div>
+    <div class="ogog-hook" id="ogog-hook">—</div>
+    <div class="ogog-ask" id="ogog-ask">Who are we really talking about?</div>
+  </div>
+  <div class="clues-wrap">
+    <div class="clues-lbl">CLUES (3 max)</div>
+    <div class="clue-row"><div class="clue-n">1</div><div class="clue-b" id="c1">—</div></div>
+    <div class="clue-row"><div class="clue-n">2</div><div class="clue-b" id="c2">—</div></div>
+    <div class="clue-row"><div class="clue-n">3</div><div class="clue-b" id="c3">—</div></div>
+  </div>
+  <button class="reveal-btn" id="rev-btn">REVEAL NEXT CLUE</button>
+  <div class="ans-wrap">
+    <div class="ans-hidden" id="ans-hidden" onclick="revealAns()">👁 TAP TO REVEAL ANSWER</div>
+    <div class="ans-shown" id="ans-shown">
+      <div class="ans-lbl">Answer</div>
+      <div class="ans-text" id="ans-text">—</div>
+    </div>
+  </div>
+  <div class="result-row">
+    <button class="rb correct" id="btn-correct" onclick="score(1)" disabled>✓ CORRECT<br><span style="font-size:.75rem">+1 PT</span></button>
+    <button class="rb wrong" id="btn-wrong" onclick="score(-1)" disabled>✗ WRONG<br><span style="font-size:.75rem">−1 PT</span></button>
+    <button class="rb timeout" id="btn-timeout" onclick="score(0)" disabled>⏱ NO ANSWER<br><span style="font-size:.75rem">0 PTS</span></button>
+  </div>
+</div>
+
+<div class="screen" id="scoreboard">
+  <div style="padding:1.5rem;max-width:800px;margin:0 auto;width:100%;">
+    <div class="sb-title">SCOREBOARD</div>
+    <div class="sb-sub" id="sb-sub">After 0 questions</div>
+    <div class="sb-progress">
+      <div class="sb-progress-title">Game Progress — 10 questions per genre per team</div>
+      <div class="prog-row">
+        <div class="prog-label">🎵 Music</div>
+        <div class="prog-bar"><div class="prog-fill m" id="pfm"></div></div>
+        <div class="prog-count" id="pcm">0</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">⚽ Football</div>
+        <div class="prog-bar"><div class="prog-fill f" id="pff"></div></div>
+        <div class="prog-count" id="pcf">0</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">🌍 Culture</div>
+        <div class="prog-bar"><div class="prog-fill c" id="pfc"></div></div>
+        <div class="prog-count" id="pcc">0</div>
+      </div>
+    </div>
+    <div class="sb-table">
+      <div class="sb-row hdr">
+        <span>#</span><span>TEAM</span>
+        <span style="color:var(--music);text-align:center">🎵</span>
+        <span style="color:var(--football);text-align:center">⚽</span>
+        <span style="color:var(--culture);text-align:center">🌍</span>
+        <span style="text-align:center">PTS</span>
+      </div>
+      <div id="sb-rows"></div>
+    </div>
+    <div class="sb-actions">
+      <button class="sb-btn sb-cont" id="sb-cont">NEXT TURN →</button>
+      <button class="sb-btn sb-end" onclick="endGame()">END GAME</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="winner-screen">
+  <div class="trophy">🏆</div>
+  <div class="w-label">Quiz Night Champions</div>
+  <div class="w-name" id="w-name">Team 1</div>
+  <div class="w-score" id="w-score">0 points</div>
+  <div class="w-board" id="w-board"></div>
+  <button class="play-again" onclick="resetAll()">PLAY AGAIN</button>
+</div>
+
+</div>
+
+<div id="reaction-overlay">
+  <canvas id="reaction-canvas"></canvas>
+  <div class="react-emoji" id="react-emoji">🔥</div>
+  <div class="react-tag" id="react-tag">CORRECT</div>
+  <div class="react-headline" id="react-headline">BAR OF KNOWLEDGE</div>
+  <div class="react-sub" id="react-sub">—</div>
+  <div class="pts-bubble" id="pts-bubble">+1 PT</div>
+  <button class="react-continue" onclick="continueAfterReaction()">CONTINUE →</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =========================================================
+// QUESTION BANK — 30 per genre
+// =========================================================
+const QBANK = {
+music:[
+  {tag:"🧨 Admit it or deny it",hook:"You can hate him, call him soft, say he sings too much…\n…but when it comes to dominating charts, running eras, and making everyone—from rappers to pop stars—adjust their sound…",ask:"Who are we really talking about?",clues:["Started from a teen drama and still ended up outlasting 'real rappers'","Turned emotional vulnerability into a global formula others copied","Built a city into a brand so strong it became 'The 6' worldwide"],a:"Drake"},
+  {tag:"🌊 Name the drip",hook:"Atlanta turned luxury pain into melody.\nHe glided over beats like silk—while carrying the weight of a label's legal storm.\nPlayed behind the curtain, then stepped into the light.",ask:"Who does this bar belong to?",clues:["My voice made 'drip' sound like a lifestyle, not just a song","I rose under Young Thug's wing before legal chaos hit the whole camp","My album DS4EVER proved I could go platinum even when everything around me was collapsing"],a:"Gunna"},
+  {tag:"🛸 Identify the frequency",hook:"Distorted 808s. Rage beats. Alien ad-libs that shouldn't work but somehow go stupid hard.\nThis isn't Whole Lotta Red. This isn't Astroworld.\nThis is something weirder. Something rawer.",ask:"What artist pioneered this sound?",clues:["Not the vamp aesthetic pioneer behind Whole Lotta Red","Not the Houston showman who built Astroworld","The artist whose 2 Alive run cemented him as a 'rage god' with alien ad-libs"],a:"Yeat"},
+  {tag:"💎 Name the blueprint",hook:"'Life Is Good' was a global hit.\nBut before that—'Yes Indeed.' 'Drip Too Hard.' Pure dominance.\nHe turned nothing into everything, and Atlanta into his zip code.",ask:"Who built this legacy?",clues:["Born Dominique Armani Jones, came out of Atlanta with nothing and built everything","His 2018 run (Harder Than Ever) stamped him as untouchable in his lane","Every feature felt like a takeover—he didn't ride waves, he became one"],a:"Lil Baby"},
+  {tag:"🧊 Cold case, warm bars",hook:"Not American by birth.\nDoesn't rap like he's chasing hits—sounds like he's already survived something.\nAnd his name? It's not random… it's a warning from history.",ask:"Who are we describing?",clues:["Before the fame, immigration issues almost erased everything he built","His chemistry with Metro Boomin created one of trap's darkest, coldest sounds","'Savage' isn't just branding—it's the mindset behind every bar"],a:"21 Savage"},
+  {tag:"🟣 Decode the timeline",hook:"Dirty Sprite isn't just a drink—it's a timeline.\nHendrix isn't just a nickname—it's an alter ego.\nAnd heartbreak? That's the fuel, not the weakness.",ask:"Who does this blueprint belong to?",clues:["He turned pain, toxicity, and codeine into a sound that others copied for a decade","His run from Monster to DS2 didn't just succeed—it shifted the entire genre's direction","When that flute dropped, you already knew what time it was"],a:"Future"},
+  {tag:"🎙️ Place the voice",hook:"Fayetteville, North Carolina.\nConscious. Storytelling. No features.\nWent platinum with just the pen and the truth.",ask:"Who is this rapper?",clues:["Real name is Jermaine Lamarr Cole. Born in Germany.","His 2014 album is named after his childhood home's street address","He has a lyrical rivalry with Kendrick Lamar. His mixtape 'Friday Night Lights' is legendary."],a:"J. Cole"},
+  {tag:"👑 Name the king",hook:"Compton gave him the throne.\nHis concept albums are considered masterclasses.\nHe won a Pulitzer Prize.\nFor a rap album.\nLet that sink in.",ask:"Who are we crowning?",clues:["Real name is Kendrick Lamar Duckworth","His album 'To Pimp a Butterfly' is considered one of the greatest albums ever made","His 2022 album 'Mr. Morale & The Big Steppers' won the Grammy for Best Rap Album"],a:"Kendrick Lamar"},
+  {tag:"🎡 Find the festival god",hook:"He built an experience, not just a concert.\nAstroworld wasn't just an album—it was a world.\nThen in 2021, that world became something darker.",ask:"Who created this universe?",clues:["Real name is Jacques Berman Webster II. From Missouri City, Texas.","His debut project was 'Owl Pharaoh'. His albums Rodeo, BITAS, and Astroworld are classics.","He has a son with Kylie Jenner. His Nike collab is called 'Air Jordan Travis Scott.'"],a:"Travis Scott"},
+  {tag:"🌆 Brooklyn's ghost",hook:"Brooklyn drill.\nA voice too big for the city that made him.\nShot in 2020, before he even got to see what he was becoming.",ask:"Who was this rising force?",clues:["Real name Bashar Barakah Jackson. Born 1999 in Brooklyn.","He blew up with 'Welcome to the Party' and 'Dior'","His posthumous album 'Shoot for the Stars, Aim for the Moon' debuted at number 1"],a:"Pop Smoke"},
+  {tag:"🌍 Name the quartet",hook:"Four voices. One vision.\nTheir name means 'Good Music' in Swahili.\nThey headlined the Royal Albert Hall—and made East Africa proud doing it.",ask:"Who are they?",clues:["Made up of Bien, Savara, Chimano, and Polycarp","Their hit 'Extravaganza' became an East African anthem","They won multiple African Music Awards and their song 'Melanin' celebrated African beauty"],a:"Sauti Sol"},
+  {tag:"🕰️ Timeless icon check",hook:"'Bebi Bebi.' 'Mungu Peke Yake.'\nMaking music since the 90s.\nSome voices don't age—they just get cleaner.",ask:"Which Kenyan legend is this?",clues:["One of Kenya's longest-serving and most respected artists","His music blends Swahili pop, gospel influences, and contemporary sound","Real name John Nzenze. Short, punchy stage name. Born in Nakuru."],a:"Nyashinski"},
+  {tag:"🌍 Afrofusion alert",hook:"He didn't follow the genre—he named it.\n'Afrofusion.' Grammy. Netflix.\nNigeria's biggest export. The African Giant.",ask:"Who is he?",clues:["Real name Damini Ebunoluwa Ogulu. Grew up in Port Harcourt.","His albums include African Giant, Twice as Tall, and Love, Damini","His hit 'Last Last' sampled Toni Braxton. He performed at Coachella."],a:"Burna Boy"},
+  {tag:"🌑 Dark prophet incoming",hook:"2022. One song.\nIt came out of Ghana, dominated every streaming chart on the continent, and turned a young man into a continental star.\n'Kwaku the Traveller' wasn't a song—it was a statement.",ask:"Who sent it?",clues:["From Ghana. His music blends highlife, Afrobeats, and trap.","'Kwaku the Traveller' was one of the most streamed African songs of 2022","Real name Kweku Frimpong. Stage name evokes a dark, mysterious figure."],a:"Black Sherif"},
+  {tag:"🎶 Blend scientist",hook:"Nigerian by blood. Ghanaian by sound.\nHe mixed both into something nobody had a word for—so he invented one.\n'Banku music.'",ask:"Who is this genre architect?",clues:["Real name Oluwatosin Ajibade. Splits time between Nigeria and Ghana.","He coined his own genre called 'Banku music' blending Nigerian and Ghanaian sounds","He's collaborated with Beyoncé and other global superstars. Known as 'Mr Eazi.'"],a:"Mr Eazi"},
+  {tag:"⚡ Young energy detected",hook:"Born 2002. Signed to Mavin Records.\nOne song went TikTok-viral and next thing you know she's in every playlist on earth.\nDon Jazzy spotted something.",ask:"Who is she?",clues:["Real name Oyinkansola Sarah Aderibigbe","She became one of the youngest artists to top African streaming charts","Her debut album 'Star Girl' launched her as a global Afropop sensation"],a:"Ayra Starr"},
+  {tag:"💛 African love legend",hook:"He rebranded.\nFirst he was two-faced with the numbers, now he's one name.\nBut 'African Queen' stayed the same—timeless, undeniable.",ask:"Who is this Nigerian music pioneer?",clues:["Born Innocent Ujah Idibia. Initially performed as '2Face' then later as '2Baba'","His song 'African Queen' was used in the movie 'Phat Girlz' and became globally known","He's considered a pioneer of Afropop and a cultural ambassador for Nigeria"],a:"2Baba"},
+  {tag:"🌊 Global frequency",hook:"Senegal to the world.\n'7 Seconds' reached every corner of the globe.\nHis voice is mbalax. His title? Minister of Culture. Literally.",ask:"Who is this Senegalese legend?",clues:["Real name Youssou N'Dour. From Dakar, Senegal.","He founded the mbalax genre which blends Senegalese sabar drumming with jazz and pop","He served as Senegal's Minister of Culture and Tourism. He won a Grammy Award in 2004."],a:"Youssou N'Dour"},
+  {tag:"🙏 Gospel frequency",hook:"Her voice carries faith like it weighs nothing.\nSwahili. Contemporary. Pure.\n'Utaweza' didn't just chart—it became a prayer.",ask:"Which Kenyan gospel artist is this?",clues:["Based in Nairobi and blends contemporary gospel with Kenyan pop","Her songs are sung in Swahili and mix faith and Afrobeats rhythms","Her hits 'Sitolia' and 'Mungu Pekee' made her a household name in Kenyan gospel"],a:"Mercy Masika"},
+  {tag:"🔥 Genre origin check",hook:"2004. One song.\nBefore that, reggaeton was underground.\nAfter 'Gasolina'—it was everywhere. In every language. In every club.",ask:"Who pulled the trigger on reggaeton going global?",clues:["Real name Ramón Luis Ayala Rodríguez","He collaborated with Shakira on 'La Tortura' and with Nicki Minaj","His nickname is 'El Cangri.' His debut album 'Barrio Fino' is the best-selling Spanish album in history."],a:"Daddy Yankee"},
+  {tag:"📱 Discovered on the internet",hook:"He was 15. Scooter Braun was scrolling YouTube.\nNext thing you know: arenas, magazine covers, Selena Gomez.",ask:"Who got discovered like that?",clues:["His debut single 'One Time' came out in 2009 when he was just 15","He dated Selena Gomez. His album 'Purpose' spawned 'Sorry' and 'Love Yourself.'","He married Hailey Baldwin in 2018. His song 'Peaches' featured Daniel Caesar and Giveon."],a:"Justin Bieber"},
+  {tag:"🥁 Amapiano royalty",hook:"Pretoria. Log drum bass. A genre-defining sound.\n'Stimela' didn't just bang—it moved the whole culture.\nHe didn't follow Amapiano. He co-created it.",ask:"Who is this South African icon?",clues:["Real name Kabelo Motha. From Pretoria, South Africa.","He collaborated with Focalistic on 'Ke Star' which went global","His Amapiano beats use a distinctive log drum bass sound. He's one of the founding fathers of the genre."],a:"DJ Maphorisa"},
+  {tag:"🇯🇲 Kingston classic",hook:"Kingston to the world.\nRaspy voice. Playful energy.\nAnd 'It Wasn't Me' became the greatest denial anthem of the 2000s.",ask:"Who is this reggae legend?",clues:["Real name Orville Richard Burrell. Grew up in Kingston, Jamaica.","His song 'Temperature' topped charts worldwide in 2007","He has a unique raspy-smooth voice and has collaborated with reggaeton and pop artists globally."],a:"Shaggy"},
+  {tag:"🇺🇬 East Africa's export",hook:"Uganda. Luganda lyrics. Afrobeats energy.\nHe didn't wait for Lagos to come to him—he brought the sound there himself.",ask:"Which Ugandan artist is this?",clues:["From Uganda and blends Afrobeats with Luganda-language lyrics","He collaborated with Nigerian artists to bring East African sound to Lagos","His stage name starts with 'Eddy' and his music is popular across Uganda, Kenya, and Tanzania"],a:"Eddy Kenzo"},
+  {tag:"🇹🇿 Wasafi world",hook:"Tanzania's Bongo Flava scene.\n'Number One' featuring Diamond was everywhere.\nAnd WCB Wasafi wasn't just a label—it was a whole empire.",ask:"Who is this Tanzanian star?",clues:["One of Tanzania's most celebrated artists of the 2010s","His music blends Swahili lyrics with Afrobeats and R&B","He's signed to WCB Wasafi label, the same label as Diamond Platnumz"],a:"Rayvanny"},
+  {tag:"💄 Barbados built different",hook:"She didn't just make music—she built empires.\nFenty Beauty. Savage X Fenty.\nAnd at the Super Bowl halftime show? She was pregnant. Still ate.",ask:"Who is she?",clues:["Real name Robyn Rihanna Fenty","Her 2007 hit 'Umbrella' made her a global icon","She performed at the 2023 Super Bowl halftime show while pregnant. Her album 'Anti' dropped in 2016."],a:"Rihanna"},
+  {tag:"🇳🇬 Walls-shattering voice",hook:"Born in Lagos. Based in London.\n'Free Mind' went viral globally.\nThen Wizkid put her on 'Essence' and the whole world had to stop.",ask:"Who has this voice?",clues:["Real name Temilade Openiyi. From Lagos, Nigeria.","She collaborated with Wizkid on the smash hit 'Essence' which took Afrobeats global","She's won Grammy and BET Awards. Her album 'Born in the Wild' was released in 2024."],a:"Tems"},
+  {tag:"🇳🇬 30BG forever",hook:"His song 'Fall' held Billboard Hot 100 longer than any Nigerian pop song before it.\nHe's not the best rapper. Not the best singer.\nBut somehow? He's always relevant.",ask:"Who is he?",clues:["Real name David Adedeji Adeleke. From Lagos.","His albums 'A Good Time' and 'A Better Time' showed his evolution","He collaborated with Drake on 'One Dance' and 'Finesse'. He has a famous 30BG crew."],a:"Davido"},
+  {tag:"🇿🇦 Supa Mega tribute",hook:"South Africa's hip-hop throne was his.\nA famous beef. A devoted fanbase.\nThen Durban, 2023. And the throne was left empty.",ask:"Who was the Supa Mega?",clues:["Real name Kiernan Jarryd Forbes","He had a famous rap beef with Cassper Nyovest that divided South African hip-hop fans","His hits include 'Baddest' and 'All Eyes on Me'. He was known as the 'Supa Mega.'"],a:"AKA (Kiernan Forbes)"},
+  {tag:"🦁 Simba check",hook:"Dar es Salaam. WCB Wasafi. East Africa's biggest name.\nHe didn't just make it—he built a label, a brand, and a movement.\nAnd his nickname? He earned it.",ask:"Who is the Simba of East African music?",clues:["From Dar es Salaam, Tanzania and owns the WCB Wasafi label","He's collaborated with Burna Boy, Nasty C, and Harmonize","His nickname is 'Simba' and his real name is Naseeb Abdul Juma Issack."],a:"Diamond Platnumz"},
+  {tag:"📦 Chart takeover",hook:"2020. Compton. 'The Box.'\nMelodic trap. Catchy hooks. Number 1.\nAnd then the Grammy came too.",ask:"Who had this moment?",clues:["Real name Rodrick Wayne Moore Jr.","He won a Grammy for Best Rap Performance and collaborated with DaBaby and Mustard","His 2020 album 'Please Excuse Me for Being Antisocial' debuted at number 1 on Billboard 200."],a:"Roddy Ricch"}
+],
+football:[
+  {tag:"🏟️ Nairobi stadium check",hook:"It's in Nairobi. Kenya's national team plays here.\nNamed after a president. Renovated for a major tournament.\nCrowds, lights, Kasarani.",ask:"What stadium is this?",clues:["Built in 1987, capacity around 30,000.","Located in Kasarani, also called Nairobi's 'Sports City.'","Renovated for the 2007 Africa Cup of Nations. The name includes 'Moi' — Kenya's second president."],a:"Moi International Sports Centre (Kasarani)"},
+  {tag:"💭 Theatre of dreams",hook:"Manchester. 74,000 seats.\n27 years. 13 league titles.\nOne man turned this place into a dynasty.",ask:"What stadium are we describing?",clues:["Home to one of the most successful clubs in Premier League history.","Sir Alex Ferguson managed here for 27 years, winning 13 Premier League titles.","The club's badge features a red devil. Stars like Ronaldo, Rooney, and Beckham played here."],a:"Old Trafford"},
+  {tag:"⛪ Cathedral of football",hook:"Barcelona. 99,000 seats.\nMés que un club.\n600 goals from one man who never wanted to leave.",ask:"What stadium is this?",clues:["Capacity over 99,000 — one of Europe's largest stadiums.","Lionel Messi played here for 17 years scoring over 600 goals.","My name literally matches the club's name. Currently being renovated as 'Spotify Camp Nou.'"],a:"Camp Nou"},
+  {tag:"😭 National tragedy, one stadium",hook:"Rio de Janeiro. 1950. World Cup Final.\nBrazil vs Uruguay.\nA nation wept. A word was born: Maracanazo.",ask:"What stadium hosted this tragedy?",clues:["Located in Rio de Janeiro, Brazil. Built for the 1950 FIFA World Cup.","Brazil lost to Uruguay in the World Cup Final here in what became a national tragedy.","Renovated for the 2014 World Cup and 2016 Olympics. Capacity is now around 78,000."],a:"Maracanã"},
+  {tag:"🌍 Africa's biggest house",hook:"Johannesburg. 94,736 seats.\nThe Calabash. Soccer City.\n2010 World Cup Final. Waka Waka.",ask:"What is this stadium?",clues:["Capacity of 94,736 — the biggest on the African continent.","Nicknamed 'Soccer City' or 'The Calabash' due to its bowl-like shape.","Spain beat Netherlands 1-0 here in the 2010 World Cup Final. Shakira performed at the closing ceremony."],a:"FNB Stadium (Soccer City)"},
+  {tag:"💙 West London blues",hook:"Stamford Bridge. West London.\nAbramovich came, spent billions, left under sanctions.\nTuchel came in 2021, won the Champions League.",ask:"Which club is this?",clues:["Based in Stamford Bridge, West London.","Roman Abramovich owned them until 2022 sanctions forced a sale.","Star players have included Didier Drogba, Frank Lampard, and Eden Hazard."],a:"Chelsea FC"},
+  {tag:"⭐ 14 times and counting",hook:"Galácticos. Bernabéu. White shirts.\nZidane. Ronaldo. Benzema.\nNo club has touched them in Europe—14 Champions League titles and still going.",ask:"Who is this club?",clues:["Based at the Santiago Bernabéu stadium in Madrid.","They've signed players like Zidane, Ronaldo, and Beckham for world-record fees.","Their president is Florentino Pérez. They've won the Champions League 14 times."],a:"Real Madrid"},
+  {tag:"🏠 The Allianz fortress",hook:"Munich. Bundesliga dominance for over a decade.\nThe Allianz Arena glows red on match nights.\n41 Bundesliga goals in one season from one striker.",ask:"Which German giant is this?",clues:["Home is the Allianz Arena, recognizable by its illuminated exterior.","Nicknamed 'FC Hollywood' due to the dramatic off-field stories of their players.","Robert Lewandowski scored 41 Bundesliga goals in a single season for them."],a:"Bayern Munich"},
+  {tag:"👴 The Old Lady",hook:"Turin. Black and white stripes.\n9 consecutive Serie A titles.\nThey signed Ronaldo for €100 million. Let that breathe.",ask:"Which Italian club is this?",clues:["Home ground is the Juventus Stadium, later renamed the Allianz Stadium.","They signed Cristiano Ronaldo in 2018 for €100 million.","All-time legends include Alessandro Del Piero, Gianluigi Buffon, and Michel Platini."],a:"Juventus FC"},
+  {tag:"💰 QSI changed everything",hook:"Paris. Parc des Princes.\nQatar Sports Investments arrived in 2011 and changed football forever.\nNeymar for €222 million. Nothing was ever the same.",ask:"Which club are we talking about?",clues:["Home is the Parc des Princes stadium.","They signed Neymar for a world-record €222 million in 2017.","Kylian Mbappé left them to join Real Madrid in 2024. Messi played there in 2021–2023."],a:"Paris Saint-Germain (PSG)"},
+  {tag:"🐐 CR7 or nothing",hook:"He makes you choose a side.\nSporting. United. Real. Juventus. Now Saudi.\nFive Ballon d'Or. Most international goals ever.",ask:"Who is this football icon?",clues:["Full name is Cristiano Ronaldo dos Santos Aveiro.","He played for Sporting CP, Manchester United, Real Madrid, Juventus, and now Al Nassr.","He holds the record for most international goals. His nickname is 'CR7.'"],a:"Cristiano Ronaldo"},
+  {tag:"🐐 8 Ballon d'Or and still counting",hook:"Argentina gave him to the world.\nBarcelona kept him for 17 years.\nAnd in 2022, he finally lifted the one trophy that was missing.",ask:"Who are we talking about?",clues:["Full name is Lionel Andrés Messi. Born in Rosario, Argentina.","He spent 17 years at Barcelona before joining PSG and then Inter Miami.","He's won 8 Ballon d'Or awards — more than any other player in history."],a:"Lionel Messi"},
+  {tag:"🇰🇪 Kenya's number 9",hook:"Kenya's all-time top scorer.\nJ-League in Japan. Qatar in the Gulf.\nHarambee Stars captain. The face of Kenyan football.",ask:"Who wears this jersey?",clues:["He's played for the Harambee Stars national team for many years and is the captain.","He played for Kashiwa Reysol in Japan and Al-Duhail in Qatar.","He's considered the best Kenyan footballer of the modern era. He wears number 9."],a:"Michael Olunga"},
+  {tag:"🦁 African lion, European throne",hook:"Cameroon gave him to the world.\nHe won the Champions League with Barcelona—twice.\nAnd once more with Inter Milan.\nThen he went home to lead his country.",ask:"Which African great is this?",clues:["Full name Samuel Eto'o Fils. Born in 1981 in Nkon, Cameroon.","He won the Champions League with Barcelona in 2006 and 2009, and with Inter Milan in 2010.","He's now the President of the Cameroonian Football Federation. He scored 56 goals for Cameroon."],a:"Samuel Eto'o"},
+  {tag:"🇫🇷 The headbutt heard round the world",hook:"1998 World Cup winner. 2006 World Cup Final.\nA moment of madness that became the most replayed scene in football history.\nZizou.",ask:"Who are we describing?",clues:["Full name Zinedine Yazid Zidane. Born to Algerian parents in Marseille.","He played for Juventus, Real Madrid, and the French national team.","He managed Real Madrid to 3 consecutive Champions League titles (2016–2018)."],a:"Zinedine Zidane"},
+  {tag:"🇧🇷 O Fenômeno",hook:"Knee surgeries that would have ended anyone else.\nTwo World Cups. Two Ballon d'Or.\nAnd two goals in the 2002 World Cup Final—after everyone counted him out.",ask:"Who is this Brazilian legend?",clues:["Full name Ronaldo Luís Nazário de Lima. Born in Bento Ribeiro, Brazil.","He was plagued by knee injuries but returned to score twice in the 2002 World Cup Final.","He played for Barcelona, Inter Milan, Real Madrid, and AC Milan."],a:"Ronaldo Nazário"},
+  {tag:"😤 The penalty that haunts",hook:"2010 World Cup. Quarter-final. Ghana vs Uruguay.\nOne hand on the line. One penalty missed.\nA whole continent felt it.",ask:"Who took that penalty?",clues:["Full name Asamoah Gyan. He was the top scorer at the 2010 World Cup.","He played for Stade Rennais, Sunderland, and Al Ain.","He's Ghana's all-time top scorer with 51 international goals."],a:"Asamoah Gyan"},
+  {tag:"👑 Egyptian King",hook:"Liverpool. Left foot. Electric pace.\n32 goals in 38 games. A Premier League record.\nThe Egyptian King runs Anfield.",ask:"Who are we crowning?",clues:["Full name Mohamed Salah Ghaly. Born in Nagrig, Gharbia Governorate, Egypt.","He set the Premier League scoring record with 32 goals in a 38-game season in 2017/18.","He's nicknamed 'The Egyptian King.' He has scored over 200 goals for Liverpool."],a:"Mohamed Salah"},
+  {tag:"🧤 Bafana's wall",hook:"South Africa. Kaizer Chiefs. Golden gloves.\nDecades of service. Acrobatic. Charismatic.\nConsidered the greatest African goalkeeper to ever do it.",ask:"Who is this goalkeeper?",clues:["Full name Itumeleng Khune. He's represented Bafana Bafana in multiple tournaments.","He's known for acrobatic saves and charismatic personality.","He's won the PSL Best Goalkeeper award multiple times. His nickname is 'Itu.'"],a:"Itumeleng Khune"},
+  {tag:"💚 Super Eagle, second life",hook:"Arsenal legend. Nigerian star.\nWon the Champions League with Ajax at 18.\nThen doctors found a heart condition.\nHe had surgery. Came back. Scored a hat-trick against Chelsea.",ask:"Who had this story?",clues:["Full name Nwankwo Kanu. Born in 1976 in Owerri, Nigeria.","He won the Champions League with Ajax in 1995 before heart surgery threatened his career.","He won the Africa Cup of Nations with Nigeria in 1994. Arsenal fans remember his stunning hat-trick against Chelsea."],a:"Nwankwo Kanu"},
+  {tag:"🌍 Planet's biggest event",hook:"Every 4 years. 32 nations. One golden trophy.\n1930 was the first one. Uruguay won.\nBrazil has won it 5 times—more than anyone else.",ask:"What tournament is this?",clues:["Features 32 national teams competing over a month (expanding to 48 teams from 2026).","The trophy is a golden figure holding the globe.","Brazil has won it 5 times — more than any other nation."],a:"FIFA World Cup"},
+  {tag:"🎵 Name that anthem",hook:"'This is the Champions League.'\nYou hear those three notes and you know exactly what time it is.\nReal Madrid have won it 14 times. The ultimate stage.",ask:"What competition is this?",clues:["Formerly known as the European Cup before rebranding in 1992.","Real Madrid has won it a record 14 times.","The group stages are followed by knockout rounds. The final is held at a neutral venue."],a:"UEFA Champions League"},
+  {tag:"🌍 Africa's cup",hook:"Since 1957. Egypt has won it 7 times.\nEvery two years, African nations go to war for this trophy.\nAlgeria in 2019. Senegal in 2021. History every time.",ask:"What tournament is this?",clues:["Held every two years and the host nation gets automatic qualification.","The 2019 edition in Egypt was won by Algeria. The 2021 edition (held in 2022) was won by Senegal.","Organised by the Confederation of African Football (CAF)."],a:"Africa Cup of Nations (AFCON)"},
+  {tag:"🇰🇪 Local knowledge check",hook:"Nairobi. Independence year. 1963.\nGor Mahia. AFC Leopards. Tusker FC.\nThis is Kenya's football home.",ask:"What league are we describing?",clues:["Founded in 1963, the same year Kenya gained independence.","Gor Mahia is the most successful club with over 18 league titles.","The Green Army vs The Ingwe — Gor Mahia vs AFC Leopards — is Kenya's biggest football rivalry."],a:"Football Kenya Federation Premier League"},
+  {tag:"🟢 Green Army rising",hook:"Founded in 1968. Named after a Luo legend.\nNairobi. Green and white.\nMost league titles in Kenya. Period.",ask:"Which Kenyan club is this?",clues:["Founded in 1968 and named after a Luo legend.","Based in Nairobi and holds the record for most Kenyan Premier League titles.","Home matches draw massive crowds. Colors are green and white."],a:"Gor Mahia FC"},
+  {tag:"⚔️ Name the rivalry",hook:"White shirts vs blue and red.\nMadrid vs Barcelona.\nMessi vs Ronaldo.\nThe biggest club match in the world. What do you call it?",ask:"What is this fixture called?",clues:["One club is from Madrid and wears white. The other is from Barcelona and wears blue and red.","The term for this match translates as 'The Classic' in Spanish.","Messi vs Ronaldo encounters in this fixture became the defining sporting rivalry of the 2010s."],a:"El Clásico"},
+  {tag:"⚡ 1998 baby",hook:"Born in Bondy, France.\n19 years old. World Cup Final.\nGoal. Second teenager in history after Pelé to score in a World Cup Final.",ask:"Who is this generational talent?",clues:["Full name Kylian Mbappé Lottin. Born in 1998 in Bondy, France.","He won the World Cup at age 19, becoming the second teenager after Pelé to score in a World Cup final.","He moved from PSG to Real Madrid in 2024. His mother is Cameroonian."],a:"Kylian Mbappé"},
+  {tag:"🎵 You'll Never Walk Alone",hook:"Anfield. Six Champions League titles.\n2019/20—Premier League champions.\nKlopp came in 2015 and turned everything around.",ask:"Which club is this?",clues:["Home ground is Anfield and fans sing 'You'll Never Walk Alone.'","Jürgen Klopp managed them from 2015 to 2024, winning multiple major trophies.","Mohamed Salah, Virgil van Dijk, and Trent Alexander-Arnold are among their star players."],a:"Liverpool FC"},
+  {tag:"👑 The King eternal",hook:"Brazil. Santos. 1,000 career goals.\nThree World Cups.\nHe passed in December 2022—but the crown never left.",ask:"Who was O Rei?",clues:["Real name Edson Arantes do Nascimento. Born in 1940 in Três Corações, Brazil.","He played most of his career at Santos FC before moving to the New York Cosmos.","He's widely regarded as the greatest footballer of all time. He passed away in December 2022."],a:"Pelé"},
+  {tag:"🔴 The Invincibles",hook:"North London. The Emirates.\n2003/04: unbeaten all season.\nThierry Henry. Patrick Vieira. Wenger's masterpiece.",ask:"Which club achieved this?",clues:["Founded in 1886 in Woolwich, making them one of England's oldest clubs.","Arsène Wenger managed them for 22 years, including an unbeaten 'Invincibles' season in 2003/04.","Biggest rivals are Tottenham Hotspur. Famous players include Thierry Henry and Patrick Vieira."],a:"Arsenal FC"},
+  {tag:"🇧🇪 The wizard of Stamford Bridge",hook:"Belgium's best. Chelsea's crown jewel.\nPFA Players' Player of the Year 2015.\nThen Real Madrid for €100 million—and the knees said no.",ask:"Who is this Belgian icon?",clues:["Full name Eden Michael Hazard. Born in 1991 in La Louvière, Belgium.","He won the Premier League twice with Chelsea and was PFA Players' Player of the Year in 2015.","He joined Real Madrid for €100 million in 2019 but was plagued by injuries throughout his time there."],a:"Eden Hazard"}
+],
+culture:[
+  {tag:"🗡️ Rite of passage",hook:"Maasai. Young men. No anesthesia.\nPain is not an option—showing it is shameful.\nAfter this, you are Moran. A warrior.",ask:"What is this ceremony called?",clues:["It involves circumcision and tests a boy's courage. Showing pain is shameful.","After this, young men are called 'Moran' or junior warriors and live together in the bush.","The ceremony happens every few years and marks the transition from boyhood to manhood in Maasai society."],a:"Maasai Male Initiation (Enkiama)"},
+  {tag:"🌽 Street food royalty",hook:"Charcoal. Newspaper wrap. Lemon. Chili.\nEvery bus stage in Kenya has one.\nSmoke, char, and satisfaction for twenty shillings.",ask:"What street food is this?",clues:["Made from the most common staple crop in Kenya — served on the cob.","In Swahili it's called 'Mahindi Choma.' Every matatu stage has a vendor selling it.","Eaten while waiting for a matatu. The smoke and char give it a distinctive flavour."],a:"Mahindi Choma (Roasted Maize)"},
+  {tag:"🌃 Nairobi nightlife zone",hook:"Carnivore. Alchemist. Klub House.\nRooftop bars. Flea markets. Blankets on the grass.\nThe entertainment triangle of Nairobi.",ask:"Which district is this?",clues:["Located in the Westlands area of Nairobi, along Waiyaki Way and Ring Road.","Dubbed the 'entertainment triangle' by Nairobi nightlife lovers.","K1 Flea Market, Blankets & Wine, and several rooftop bars are found here."],a:"Westlands Entertainment District"},
+  {tag:"🚌 Rolling art gallery",hook:"Graffiti. Neon lights. Loud music.\nRoute 33 to Githurai. Route 58 to Rongai.\nKenyans named rappers and football stars after you.",ask:"What is this vehicle?",clues:["A minibus that operates on fixed routes across Nairobi and other Kenyan cities.","Decorations often feature rappers, football stars, and reggae artists.","Route 33 to Githurai and Route 58 to Rongai are among the most famous routes."],a:"Matatu"},
+  {tag:"🇰🇪 Freedom day",hook:"12th December. 1963.\nJomo Kenyatta raised the flag.\nNyayo National Stadium. Fireworks. One word: Freedom.",ask:"What day is this?",clues:["A national public holiday. The main celebrations are held at Nyayo National Stadium in Nairobi.","Named after the Swahili word for 'Freedom' — the same word in Kenya's national motto.","Kenya's first president Jomo Kenyatta raised the Kenyan flag for the first time on this day."],a:"Jamhuri Day (Independence Day)"},
+  {tag:"🤝 Pull together",hook:"Jomo Kenyatta popularised it.\nKenya's national motto is built from it.\nIt's not just a word—it's a philosophy of communal self-help.",ask:"What Swahili concept is this?",clues:["Translates roughly as 'Let us all pull together' in English.","Used as a rallying cry during Kenya's independence movement.","The Kenyan national motto is a single word that embodies this concept of unity and community effort."],a:"Harambee"},
+  {tag:"🥣 National dish check",hook:"Dried maize. Beans. Slow-cooked.\nEaten across every tribe in Kenya.\nIts name comes from the Kikuyu language and it rhymes with 'atheri.'",ask:"What dish is this?",clues:["Name comes from the Kikuyu language.","Similar to a stew or porridge, eaten with sukuma wiki and ugali or on its own.","Kenyan families eat it especially in the countryside. The name starts with 'Gi.'"],a:"Githeri"},
+  {tag:"🍺 Clay pot, straw, community",hook:"Fermented maize. Millet. Clay pot.\nA straw. A circle of people.\nBusaa in Luhya communities. Chang'aa in the streets.",ask:"What traditional drink is this?",clues:["A traditional alcoholic drink common in rural Kenya and Nairobi estates.","Known by different names across tribes — Busaa among Luhya and Luo communities.","Drinking it is a communal activity at village gatherings and celebrations."],a:"Chang'aa / Busaa (Traditional Kenyan Brew)"},
+  {tag:"🎤 Estate frequency",hook:"Eastlands. Mathare. Kayole. Kibera.\n2017 to 2019. Ethic Entertainment. Sailors Guild.\nSheng slang over trap beats. Raw. Nairobi-coded.",ask:"What music genre is this?",clues:["Pioneered by groups like Ethic Entertainment, Sailors Guild, and Boondocks Gang.","Songs reference Nairobi life — from Mathare to Kayole to Kibera.","The name combines a Sheng word suggesting rawness with the English word for a music genre."],a:"Gengetone"},
+  {tag:"🏃 Rift Valley magic",hook:"Eldoret. Iten. Nandi Hills.\nOlympic gold. World records. Marathon majors.\nSomething in the altitude? Or something deeper?",ask:"What cultural phenomenon is this?",clues:["Athletes from Eldoret, Iten, and Nandi Hills have won multiple Olympic gold medals.","Kenya's greatest runners include Eliud Kipchoge, David Rudisha, and Vivian Cheruiyot.","The high-altitude training grounds in this region are considered the best in the world for long-distance running."],a:"Kenyan Running Culture (Rift Valley Athletics)"},
+  {tag:"🎶 Blanket on the grass",hook:"Ngong Racecourse. Nairobi skyline.\nSauti Sol. Nyashinski. Your whole friend group.\nBring your blanket. And your appetite.",ask:"What Nairobi event is this?",clues:["The name suggests bringing a blanket to sit on the grass and enjoy music.","It's featured Sauti Sol, Nyashinski, and many Kenyan and African artists over the years.","One of Nairobi's most loved cultural events, usually held at Ngong Racecourse."],a:"Blankets & Wine"},
+  {tag:"🐘 Brown bottle energy",hook:"Since 1922. Elephant logo. 500ml brown bottle.\nNyama choma pairing mandatory.\n'Drink the wild side.' Every Kenyan knows.",ask:"What beer is this?",clues:["The name is also a Swahili word for a baby elephant.","Available in 500ml bottles and cans. The unofficial beer of Kenyan social gatherings and nyama choma.","'Drink the wild side' is one of its marketing slogans. Every Kenyan knows its distinctive brown bottle."],a:"Tusker Beer"},
+  {tag:"📱 Africa's money revolution",hook:"2007. Safaricom. A simple idea.\nSend money from your phone.\nAnd then 50 million people did. And the whole continent followed.",ask:"What platform changed everything?",clues:["The name means 'Mobile Money' in Swahili ('M' = Mobile, 'Pesa' = Money).","Partly funded by DFID (UK Aid) and launched as a small money transfer pilot.","Over 50 million people in Kenya and East Africa use it today. It inspired similar systems across Africa."],a:"M-Pesa"},
+  {tag:"🏍️ Fastest way through Nairobi",hook:"Yellow jacket. Helmet. Piki piki.\nBanned in the CBD, then chaos brought it back.\nEssential. Cheap. Fast.",ask:"What transport is this?",clues:["In Swahili known as 'piki piki.' Banned in Nairobi CBD for years but returned as traffic worsened.","Operators are easy to identify — they wear yellow or orange jackets and helmets.","An essential part of Kenya's informal transport economy, especially in rural areas and estates."],a:"Boda Boda (Motorcycle Taxi)"},
+  {tag:"🌊 Lake Turkana culture explosion",hook:"Loyangalani. Northwestern Kenya.\n14 tribes. Music. Dance. Cultural exchange.\nUNESCO said: yes, this matters.",ask:"What festival is this?",clues:["Held near Loyangalani in northwestern Kenya on the shores of Lake Turkana.","UNESCO added it to the Intangible Cultural Heritage of Humanity list.","Tribes including El Molo, Turkana, Rendille, and Samburu participate."],a:"Lake Turkana Cultural Festival"},
+  {tag:"🗣️ Nairobi's living language",hook:"It's not Swahili. Not English. Not Kikuyu.\nIt's all of them—and none of them.\nIt changes every 5 years. The estates invented it.",ask:"What language is this?",clues:["Spoken mainly by young people in Nairobi's urban estates like Eastlands, Kibera, and Kawangware.","It changes rapidly — words popular 5 years ago may already be outdated.","Words like 'maze' (friend), 'poa' (cool), and 'sawa' (okay) are among its tamer expressions."],a:"Sheng"},
+  {tag:"🦸 Heroes day",hook:"20th October. Freedom fighters. Detained. Killed.\nBritish colonial rule left scars.\nAnd this day says: we remember who fought.",ask:"What Kenyan holiday is this?",clues:["Previously called 'Kenyatta Day' before being renamed.","On this day, the government honours freedom fighters, war veterans, and heroes of the nation.","The word in the name means 'Heroes' or 'Patriots' in Swahili."],a:"Mashujaa Day"},
+  {tag:"🚂 CBD to Syokimau",hook:"Old colonial railway. New commuter trains.\nNairobi Central. Imara Daima. Embakasi.\nA way to escape the traffic on Mombasa Road.",ask:"What is this transport system?",clues:["Runs on the old Lunatic Express railway line built by the British in the early 1900s.","Managed by Kenya Railways. Stations include Nairobi Central, Imara Daima, and Embakasi.","Commuters use it to avoid Nairobi's infamous traffic jams, especially along Mombasa Road."],a:"Nairobi Commuter Rail"},
+  {tag:"💰 Hustler Nation",hook:"Boda boda rider. Street vendor. Mama mboga.\nWilliam Ruto turned this identity into a campaign.\nAnd in 2022—it won.",ask:"What political concept is this?",clues:["Deputy President William Ruto used it extensively in his 2022 presidential campaign.","It refers to someone who works hard at informal or low-income jobs to survive.","The 'Hustler Nation' vs 'dynasties' political narrative dominated Kenya's 2022 general election."],a:"Hustler (Hustler Nation)"},
+  {tag:"🛣️ Road of risk",hook:"480 kilometres. Nairobi to Mombasa.\nTsavo National Park on one side. Danger on the other.\nMtito Andei stretch: say your prayers.",ask:"What is this highway called?",clues:["Kenya's busiest highway, used by long-distance buses, trucks, and private cars.","The stretch near Mtito Andei is particularly notorious for accidents.","Bus companies like Modern Coast and Mash operate along it. Passes through Voi, Mtito Andei, and Mariakani."],a:"Nairobi-Mombasa Highway (A109)"},
+  {tag:"🍽️ Kenya's staple",hook:"Maize flour. Boiling water. Stir until stiff.\nEat with your hands. Pair with sukuma wiki, nyama choma, or whatever's available.\nIt's not a side dish—it IS the dish.",ask:"What is this food called?",clues:["Eaten across Kenya regardless of tribe. Cooked by stirring maize flour into boiling water until stiff.","Served in homes, hotels, and restaurants across the country.","Its name in Swahili literally means 'to squeeze.' You eat it with your hands in many households."],a:"Ugali"},
+  {tag:"🦁 City of wild things",hook:"Lions. Leopards. Cheetahs. Rhinos.\nAnd behind them—the Nairobi skyline.\nEstablished in 1946. Only 117 square kilometres. Right next to a capital city.",ask:"What is this place called?",clues:["Lions, leopards, cheetahs, rhinos, and buffalo roam within its boundaries.","The Nairobi city skyline is visible from within the park boundaries — a unique sight.","It was established in 1946 and covers approximately 117 square kilometres."],a:"Nairobi National Park"},
+  {tag:"🏃 Sub-2 hours",hook:"Vienna. 2019. 1:59:40.\nNo human had ever done it.\nNandi County raised him. The world watched him rewrite history.",ask:"Who is this Kenyan legend?",clues:["Full name is Eliud Kipchoge. Born in 1984 in Kapsisiywa, Nandi County.","He ran 26.2 miles in 1:59:40 in Vienna in 2019 under the 'INEOS 1:59 Challenge.'","He's won the Berlin Marathon multiple times and the London Marathon 4 times. He won Olympic gold in 2016 and 2021."],a:"Eliud Kipchoge"},
+  {tag:"📿 Colour-coded culture",hook:"Red for bravery. White for purity. Blue for sky and water.\nMaasai. Samburu. Turkana.\nEvery bead tells a story.",ask:"What cultural tradition is this?",clues:["Maasai, Samburu, and Turkana communities are famous for their intricate beaded jewelry.","The colours of the beads carry specific cultural meanings — red for bravery, white for purity, blue for sky and water.","This tradition has been recognized globally as a symbol of Kenyan cultural identity."],a:"Maasai Beadwork & Ceremony"},
+  {tag:"💻 Silicon Savannah",hook:"iHub. Nairobi Innovation Week. AfricaCom.\nStartups raised millions. The world took notice.\nNairobi wasn't just a city—it became a tech map dot.",ask:"What ecosystem is this?",clues:["Part of the broader 'Silicon Savannah' tech ecosystem that put Nairobi on the global tech map.","Launched startups that went on to raise millions in funding from global investors.","Events like iHub, Nairobi Innovation Week, and AfricaCom take place in Nairobi's growing tech scene."],a:"Nairobi Tech & Innovation Scene"},
+  {tag:"🎨 East African wrap",hook:"Bold patterns. Bright colours. Swahili proverb on the border.\nWrap it as a skirt. Use it as a baby carrier. Wear it as a headwrap.\nWomen across East Africa know exactly what this is.",ask:"What fabric is this?",clues:["A cotton fabric printed with bright geometric patterns and usually has a Swahili proverb printed on its border.","Used as a wrap skirt, baby carrier, headwrap, and beach cover by women across East Africa.","Its name is shared with a similar garment in West Africa. In Kenya and Tanzania, it's called 'Kanga.'"],a:"Kanga (Khanga)"},
+  {tag:"🌳 Nobel Prize for planting trees",hook:"2004 Nobel Peace Prize.\nTens of millions of trees planted.\nProfessor Wangari Maathai gave Kenya back its forests.",ask:"What movement did she start?",clues:["Professor Wangari Maathai won the Nobel Peace Prize in 2004 for her environmental conservation work.","The Green Belt Movement she founded planted tens of millions of trees across Kenya.","She encouraged communities to plant native trees to restore degraded land."],a:"The Green Belt Movement (Wangari Maathai)"},
+  {tag:"⛵ Coast life",hook:"Coral island. Likoni Ferry. Fort Jesus built in 1593.\nDiani. Nyali. Bamburi.\nKenya's second city and its oldest port.",ask:"What city is this?",clues:["Sits on a coral island connected to the mainland by the Likoni Ferry.","Fort Jesus, built by the Portuguese in 1593, is one of its most famous landmarks.","Its beaches — Diani, Nyali, and Bamburi — attract tourists from across the world."],a:"Mombasa"},
+  {tag:"🍖 Controversial delicacy",hook:"Onions. Tomatoes. Open fire.\nGoat organs. Intestines. Liver.\nIn Swahili, the name literally means 'waste.' Kenyans eat it with pride.",ask:"What dish is this?",clues:["Popular at Kenyan nyama choma spots and outdoor markets.","Usually made from goat or cow organs. Some people love it, others refuse to try it.","Its name in Swahili means 'rubbish' or 'waste' — but to Kenyans who love it, it's a delicacy."],a:"Matumbo (Tripe/Offal Stew)"},
+  {tag:"📺 KBC classic",hook:"Every Sunday. KBC. Decades of music, comedy, and Kenyan talent.\nIts name means 'Sunday' in Swahili.\nIt launched more careers than any talent show.",ask:"What show are we describing?",clues:["Broadcast on Kenya Broadcasting Corporation (KBC) for decades.","A weekly show that has launched the careers of many Kenyan musicians and comedians.","Its name in Swahili means 'Sunday' — it's typically a weekend show."],a:"Vitimbi / Vioja Mahakamani (KBC Classic Shows)"}
+]
+};
+
+// =========================================================
+// SCORING REACTIONS
+// =========================================================
+const CORRECT_REACTIONS=[
+  {emoji:"🔥",headline:"BAR OF KNOWLEDGE",sub:"Wow. The way you just walked in there and TOOK that point.\nI wish I had your brain. Genuinely. Rent it out."},
+  {emoji:"💎",headline:"DRIP CERTIFIED",sub:"Not everyone has this level of IQ.\nYou do. And now everyone knows it.\nOkay intellectual."},
+  {emoji:"🧠",headline:"GALAXY-BRAINED",sub:"The audacity to just… know things.\nOther teams are shaking right now. You felt that."},
+  {emoji:"👑",headline:"CROWN SECURED",sub:"You answered that like it was nothing.\nLike you literally wrote the textbook.\nRespect. Unironically."},
+  {emoji:"⚡",headline:"NO CAP THAT WAS COLD",sub:"The drip of knowing this question is immeasurable.\nScientists cannot calculate how much you ate just now."},
+  {emoji:"🎯",headline:"DEAD ON",sub:"The precision. The confidence. The delivery.\nBaby you ate and LEFT NO CRUMBS."},
+  {emoji:"🌊",headline:"WAVE INCOMING",sub:"I just felt a shift in the room.\nThat answer had AUTHORITY. Go off king/queen."},
+  {emoji:"🏆",headline:"SCHOLAR ERA",sub:"Did you rehearse this? Because that was too clean.\nAlmost suspicious. But we'll allow it."}
+];
+const WRONG_REACTIONS=[
+  {emoji:"💀",headline:"BESTIE… NO.",sub:"Not to be dramatic but your ancestors are looking away right now.\nThey didn't pass down knowledge for THIS."},
+  {emoji:"🫠",headline:"MELTING RN",sub:"The confidence with which you said that wrong answer…\nimmaculate. Wrong. But immaculate."},
+  {emoji:"🤡",headline:"THE CLOWN HAS LOGGED IN",sub:"I'm not saying you're uninformed.\nI'm just saying Google exists and maybe—just maybe—you two should meet."},
+  {emoji:"😬",headline:"YIKES ON SEVERAL BIKES",sub:"Don't worry. Everyone in this room will forget this in… \n…actually no, they won't. But it's okay."},
+  {emoji:"📉",headline:"STOCKS CRASHING",sub:"Your knowledge portfolio just took a hit.\nBut the market can recover. It'll be okay chief."},
+  {emoji:"🧊",headline:"ICE COLD (NOT IN A GOOD WAY)",sub:"Somewhere out there a Wikipedia article feels personally disrespected.\nSent flowers. They declined."},
+  {emoji:"😭",headline:"THE AUDACITY THO",sub:"You said that answer with your whole chest.\nAnd then reality walked in and said 'no bestie, absolutely not.'"},
+  {emoji:"🫣",headline:"CLOSE YOUR EYES",sub:"We're not going to talk about this one.\nWe'll just deduct the point quietly and move on with dignity."}
+];
+
+// =========================================================
+// SHUFFLE — pure independent shuffle, no slicing shared pool
+// =========================================================
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+// KEY FIX: each team gets its OWN independent shuffle of the full 30-question pool
+// then we take the first QLIMIT=10 from that shuffle
+// This guarantees no two teams see the same question in the same order
+// AND guarantees every team always has 10 unique questions available
+function buildTeamQueues(teamList){
+  const queues={};
+  ['music','football','culture'].forEach(genre=>{
+    teamList.forEach(team=>{
+      if(!queues[team]) queues[team]={};
+      // Each team independently shuffles the full 30-question bank
+      // and takes the first 10 — guaranteed unique per team, no sharing
+      queues[team][genre]=shuffle(QBANK[genre]).slice(0,QLIMIT);
+    });
+  });
+  return queues;
+}
+
+// =========================================================
+// STATE
+// =========================================================
+// QLIMIT=10: each team answers 10 per genre → 30 total per team
+const QLIMIT=10;
+let teams=[],scores={},gScores={},teamQueues={},teamGenreCount={};
+let currentTeam=0,lastGenre=null,curGenre=null,curQ=null;
+let cluesShown=0,ansShown=false,timedOut=false;
+let timerID=null,timeLeft=60;
+let totalQ=0;
+let pendingScoreData=null;
+
+// =========================================================
+// SETUP
+// =========================================================
+const dotColors=['','f','c','w','x','y'];
+document.getElementById('add-btn').addEventListener('click',()=>{
+  const c=document.getElementById('team-inputs');
+  const n=c.children.length;
+  if(n>=6)return;
+  const row=document.createElement('div');
+  row.className='team-row';
+  row.innerHTML=`<div class="team-dot ${dotColors[n]||''}"></div><input class="team-input" placeholder="Team ${n+1}" maxlength="18">`;
+  c.appendChild(row);
+  if(c.children.length>=6)document.getElementById('add-btn').style.display='none';
+});
+
+document.getElementById('start-btn').addEventListener('click',()=>{
+  const inputs=document.querySelectorAll('.team-input');
+  teams=Array.from(inputs).map((el,i)=>el.value.trim()||`Team ${i+1}`);
+  teams.forEach(t=>{
+    scores[t]=0;
+    gScores[t]={music:0,football:0,culture:0};
+    teamGenreCount[t]={music:0,football:0,culture:0};
+  });
+  // BUILD QUEUES AFTER scores are initialized
+  teamQueues=buildTeamQueues(teams);
+  totalQ=0;lastGenre=null;currentTeam=0;pendingScoreData=null;
+  showGenrePick();
+});
+
+// =========================================================
+// GENRE PICK
+// =========================================================
+function showGenrePick(){
+  const team=teams[currentTeam];
+  document.getElementById('gp-team').textContent=team;
+  document.getElementById('gp-meta').textContent=`Q${totalQ+1} · ${team.toUpperCase()} PICKS`;
+  ['music','football','culture'].forEach(g=>{
+    const card=document.querySelector(`.gc.${g}`);
+    const done=teamGenreCount[team][g];
+    const pct=(done/QLIMIT)*100;
+    document.getElementById(`bar-${g}`).style.width=pct+'%';
+    document.getElementById(`prog-${g}`).textContent=`${done} / ${QLIMIT} done`;
+    card.classList.remove('blocked');
+    // Block if this team finished this genre OR it was the last genre played (no back-to-back)
+    if(done>=QLIMIT||g===lastGenre) card.classList.add('blocked');
+  });
+  showScreen('genre-pick');
+}
+
+document.querySelectorAll('.gc').forEach(card=>{
+  card.addEventListener('click',()=>{
+    if(card.classList.contains('blocked'))return;
+    startQuestion(card.dataset.g);
+  });
+});
+
+// =========================================================
+// QUESTION
+// =========================================================
+function startQuestion(genre){
+  curGenre=genre;
+  const team=teams[currentTeam];
+  const queue=teamQueues[team][genre];
+  curQ=queue.shift();
+  if(!curQ){showToast('No more questions in this genre!','neutral');return;}
+
+  cluesShown=0;ansShown=false;timedOut=false;
+
+  const badge=document.getElementById('q-badge');
+  badge.className=`q-badge ${genre}`;
+  badge.textContent=genre==='music'?'🎵 Music':genre==='football'?'⚽ Football':'🌍 Culture';
+  document.getElementById('q-teamname').textContent=team;
+  // Show current question number out of 10 for this genre for this team
+  document.getElementById('q-qnum').textContent=`${genre.toUpperCase()} QUESTION ${teamGenreCount[team][genre]+1} OF ${QLIMIT}`;
+
+  document.getElementById('ogog-tag').textContent=curQ.tag;
+  document.getElementById('ogog-hook').innerHTML=curQ.hook.replace(/\n/g,'<br>');
+  document.getElementById('ogog-ask').textContent=curQ.ask;
+
+  ['c1','c2','c3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.textContent=curQ.clues[i];
+    el.classList.remove('show');
+  });
+
+  document.getElementById('ans-hidden').style.display='block';
+  document.getElementById('ans-shown').style.display='none';
+  document.getElementById('ans-text').textContent=curQ.a;
+  document.getElementById('rev-btn').disabled=false;
+  document.getElementById('rev-btn').textContent='REVEAL NEXT CLUE';
+  document.getElementById('btn-correct').disabled=true;
+  document.getElementById('btn-wrong').disabled=true;
+  document.getElementById('btn-timeout').disabled=true;
+
+  startTimer();
+  showScreen('question-screen');
+}
+
+function startTimer(){
+  clearInterval(timerID);
+  timeLeft=60;
+  updateTimerUI();
+  timerID=setInterval(()=>{
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft<=0){
+      clearInterval(timerID);
+      timedOut=true;
+      revealAns();
+      showToast("⏰ TIME'S UP — 0 pts",'neutral');
+      enableResultBtns();
+    }
+  },1000);
+}
+
+function updateTimerUI(){
+  document.getElementById('tnum').textContent=timeLeft;
+  const c=document.getElementById('tc');
+  const off=251-(251*timeLeft/60);
+  c.style.strokeDashoffset=off;
+  c.style.stroke=timeLeft>20?'var(--football)':timeLeft>10?'var(--culture)':'var(--music)';
+}
+
+document.getElementById('rev-btn').addEventListener('click',()=>{
+  if(cluesShown>=3)return;
+  document.getElementById(`c${cluesShown+1}`).classList.add('show');
+  cluesShown++;
+  if(cluesShown>=3){
+    document.getElementById('rev-btn').disabled=true;
+    document.getElementById('rev-btn').textContent='ALL CLUES SHOWN';
+  }
+});
+
+function revealAns(){
+  if(ansShown)return;
+  ansShown=true;
+  clearInterval(timerID);
+  for(let i=cluesShown;i<3;i++)document.getElementById(`c${i+1}`).classList.add('show');
+  document.getElementById('ans-hidden').style.display='none';
+  document.getElementById('ans-shown').style.display='block';
+  enableResultBtns();
+}
+
+function enableResultBtns(){
+  document.getElementById('btn-correct').disabled=false;
+  document.getElementById('btn-wrong').disabled=false;
+  document.getElementById('btn-timeout').disabled=false;
+}
+
+// =========================================================
+// SCORE
+// =========================================================
+function score(pts){
+  clearInterval(timerID);
+  if(timedOut&&pts!==0) pts=0;
+  pendingScoreData={pts,team:teams[currentTeam],genre:curGenre};
+  if(pts===0){applyPendingScore();return;}
+  if(pts===1) showCorrectReaction(teams[currentTeam]);
+  else showWrongReaction(teams[currentTeam]);
+}
+
+function applyPendingScore(){
+  if(!pendingScoreData)return;
+  const{pts,team,genre}=pendingScoreData;
+  pendingScoreData=null;
+  scores[team]+=pts;
+  gScores[team][genre]+=pts;
+  teamGenreCount[team][genre]++;
+  lastGenre=genre;
+  totalQ++;
+  currentTeam=(currentTeam+1)%teams.length;
+
+  // Game over when EVERY team has answered QLIMIT questions in ALL 3 genres
+  const gameOver=teams.every(t=>
+    ['music','football','culture'].every(g=>teamGenreCount[t][g]>=QLIMIT)
+  );
+  showScoreboard(gameOver);
+}
+
+// =========================================================
+// REACTION OVERLAY
+// =========================================================
+let reactionCanvas,reactionCtx,reactionAnimFrame;
+
+function showCorrectReaction(){
+  const r=CORRECT_REACTIONS[Math.floor(Math.random()*CORRECT_REACTIONS.length)];
+  const o=document.getElementById('reaction-overlay');
+  o.className='correct-mode';
+  document.getElementById('react-emoji').textContent=r.emoji;
+  document.getElementById('react-tag').textContent='CORRECT ✓';
+  document.getElementById('react-headline').textContent=r.headline;
+  document.getElementById('react-sub').textContent=r.sub;
+  document.getElementById('pts-bubble').textContent='+1 POINT';
+  o.classList.add('show');
+  startCorrectCanvas();
+  spawnScoreFlash('+1','#0aff6e');
+}
+
+function showWrongReaction(){
+  const r=WRONG_REACTIONS[Math.floor(Math.random()*WRONG_REACTIONS.length)];
+  const o=document.getElementById('reaction-overlay');
+  o.className='wrong-mode';
+  document.getElementById('react-emoji').textContent=r.emoji;
+  document.getElementById('react-tag').textContent='WRONG ✗';
+  document.getElementById('react-headline').textContent=r.headline;
+  document.getElementById('react-sub').textContent=r.sub;
+  document.getElementById('pts-bubble').textContent='−1 POINT';
+  o.classList.add('show');
+  startWrongCanvas();
+  spawnScoreFlash('−1','#ff2d55');
+}
+
+function continueAfterReaction(){
+  const o=document.getElementById('reaction-overlay');
+  o.classList.remove('show');
+  cancelAnimationFrame(reactionAnimFrame);
+  if(reactionCtx)reactionCtx.clearRect(0,0,reactionCanvas.width,reactionCanvas.height);
+  applyPendingScore();
+}
+
+function startCorrectCanvas(){
+  const canvas=document.getElementById('reaction-canvas');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const ctx=canvas.getContext('2d');
+  reactionCanvas=canvas;reactionCtx=ctx;
+  const particles=[];
+  for(let i=0;i<80;i++){
+    particles.push({x:Math.random()*canvas.width,y:canvas.height+Math.random()*200,r:2+Math.random()*5,vx:(Math.random()-.5)*2,vy:-(1.5+Math.random()*3),alpha:.7+Math.random()*.3,color:['#0aff6e','#ffd000','#ffffff','#00ffcc'][Math.floor(Math.random()*4)]});
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.alpha-=.004;if(p.y<-20){p.y=canvas.height+10;p.alpha=.8;}ctx.save();ctx.globalAlpha=Math.max(0,p.alpha);ctx.fillStyle=p.color;ctx.shadowColor=p.color;ctx.shadowBlur=10;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.restore();});
+    reactionAnimFrame=requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+function startWrongCanvas(){
+  const canvas=document.getElementById('reaction-canvas');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const ctx=canvas.getContext('2d');
+  reactionCanvas=canvas;reactionCtx=ctx;
+  const particles=[];
+  const symbols=['✗','💀','😬','❌'];
+  for(let i=0;i<30;i++){
+    particles.push({x:Math.random()*canvas.width,y:-50-Math.random()*300,vy:1+Math.random()*2,rot:Math.random()*Math.PI*2,rotV:(Math.random()-.5)*.1,alpha:.15+Math.random()*.2,size:16+Math.random()*24,sym:symbols[Math.floor(Math.random()*symbols.length)]});
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{p.y+=p.vy;p.rot+=p.rotV;if(p.y>canvas.height+60)p.y=-60;ctx.save();ctx.globalAlpha=p.alpha;ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.font=`${p.size}px serif`;ctx.fillStyle='#ff2d55';ctx.textAlign='center';ctx.fillText(p.sym,0,0);ctx.restore();});
+    reactionAnimFrame=requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+function spawnScoreFlash(text,color){
+  const el=document.createElement('div');
+  el.className='score-flash';
+  el.textContent=text;
+  el.style.color=color;
+  el.style.textShadow=`0 0 40px ${color}`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),900);
+}
+
+// =========================================================
+// SCOREBOARD
+// =========================================================
+function showScoreboard(isEnd=false){
+  const totalPerGenre=teams.length*QLIMIT;
+  ['music','football','culture'].forEach(g=>{
+    const done=teams.reduce((sum,t)=>sum+teamGenreCount[t][g],0);
+    const pct=Math.min(100,(done/totalPerGenre)*100);
+    document.getElementById(`pf${g[0]}`).style.width=pct+'%';
+    document.getElementById(`pc${g[0]}`).textContent=`${done}/${totalPerGenre}`;
+  });
+
+  document.getElementById('sb-sub').textContent=isEnd?'FINAL SCORES — GAME OVER':`After ${totalQ} question${totalQ!==1?'s':''}`;
+
+  const sorted=[...teams].sort((a,b)=>scores[b]-scores[a]);
+  const rowsEl=document.getElementById('sb-rows');
+  rowsEl.innerHTML='';
+  sorted.forEach((t,i)=>{
+    const row=document.createElement('div');
+    row.className='sb-row';
+    const tot=scores[t];
+    const color=tot>0?'var(--football)':tot<0?'var(--music)':'var(--white)';
+    row.innerHTML=`
+      <span class="sb-rank ${i===0?'top':''}">${i===0?'🥇':i+1}</span>
+      <span class="sb-name">${t}</span>
+      <span class="sb-m">${gScores[t].music>=0?'+':''}${gScores[t].music}</span>
+      <span class="sb-f">${gScores[t].football>=0?'+':''}${gScores[t].football}</span>
+      <span class="sb-c">${gScores[t].culture>=0?'+':''}${gScores[t].culture}</span>
+      <span class="sb-tot" style="color:${color}">${tot>=0?'+':''}${tot}</span>
+    `;
+    rowsEl.appendChild(row);
+  });
+
+  const cont=document.getElementById('sb-cont');
+  if(isEnd){
+    cont.textContent='SEE WINNER 🏆';
+    cont.onclick=()=>endGame();
+  } else {
+    cont.textContent='NEXT TURN →';
+    cont.onclick=()=>showGenrePick();
+  }
+  showScreen('scoreboard');
+}
+
+function endGame(){
+  const sorted=[...teams].sort((a,b)=>scores[b]-scores[a]);
+  const winner=sorted[0];
+  document.getElementById('w-name').textContent=winner;
+  document.getElementById('w-score').textContent=`${scores[winner]>=0?'+':''}${scores[winner]} points · 🎵${gScores[winner].music>=0?'+':''}${gScores[winner].music} ⚽${gScores[winner].football>=0?'+':''}${gScores[winner].football} 🌍${gScores[winner].culture>=0?'+':''}${gScores[winner].culture}`;
+  const board=document.getElementById('w-board');
+  board.innerHTML='';
+  sorted.forEach((t,i)=>{
+    const row=document.createElement('div');
+    row.className='w-row';
+    const tot=scores[t];
+    row.innerHTML=`<span class="w-rname">${i===0?'🥇 ':''}${t}</span><span class="w-rpts" style="color:${tot>=0?'var(--football)':'var(--music)'}">${tot>=0?'+':''}${tot}</span>`;
+    board.appendChild(row);
+  });
+  showScreen('winner-screen');
+  confetti();
+}
+
+function resetAll(){
+  teams=[];scores={};gScores={};teamQueues={};teamGenreCount={};
+  totalQ=0;currentTeam=0;lastGenre=null;pendingScoreData=null;
+  document.querySelectorAll('.team-input').forEach(el=>el.value='');
+  const c=document.getElementById('team-inputs');
+  while(c.children.length>2)c.removeChild(c.lastChild);
+  document.getElementById('add-btn').style.display='';
+  showScreen('setup');
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+let toastT;
+function showToast(msg,type='neutral'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className=`toast show ${type}`;
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+function confetti(){
+  const cols=['#ff2d55','#0aff6e','#ffd000','#7c4dff','#00b0ff','#ff6d00'];
+  for(let i=0;i<100;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      el.className='cp';
+      el.style.cssText=`left:${Math.random()*100}vw;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${1.5+Math.random()*2.5}s;animation-delay:${Math.random()*.8}s;`;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),5000);
+    },i*25);
+  }
+}
+</script>
+</body>
+</html>
